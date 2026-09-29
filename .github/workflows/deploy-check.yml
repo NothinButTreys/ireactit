@@ -1,0 +1,37 @@
+name: deploy-check
+on: deployment_status
+jobs:
+  deploy-check:
+    if: github.event.deployment_status.state == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      BASE_URL: ${{ github.event.deployment_status.target_url }}
+      DITL_TOKEN: ${{ secrets.DITL_TOKEN }}
+      VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+      DEPLOY_ENV: ${{ github.event.deployment.environment }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.deployment.sha }}
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium webkit
+      - name: Run against deployment
+        run: |
+          echo "Testing $DEPLOY_ENV deployment at $BASE_URL"
+          if [ "$DEPLOY_ENV" = "Production" ]; then
+            pnpm e2e:ditl
+          else
+            pnpm exec playwright test tests/e2e tests/ditl
+          fi
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report-deploy
+          path: playwright-report
+          retention-days: 7
