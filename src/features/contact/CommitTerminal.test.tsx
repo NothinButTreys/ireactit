@@ -1,7 +1,9 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { renderToString } from 'react-dom/server';
 import { CommitTerminal } from './CommitTerminal';
+import { profile } from '@/content/profile';
 import { RenderCounterBadge, RenderCounterProvider } from '@/features/render-counter/RenderCounter';
 
 function renderTerminal() {
@@ -30,6 +32,26 @@ describe('<CommitTerminal />', () => {
     expect(screen.getByLabelText(/--author/)).toHaveAttribute('aria-invalid', 'true');
     expect(screen.getByText('Tell me your name')).toBeInTheDocument();
     expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('prerenders a POST form with the push button disabled until hydrated, plus a no-JS LinkedIn fallback', () => {
+    const html = renderToString(
+      <RenderCounterProvider>
+        <CommitTerminal />
+      </RenderCounterProvider>,
+    );
+    const doc = document.createElement('div');
+    doc.innerHTML = html;
+    expect(doc.querySelector('form')).toHaveAttribute('method', 'post');
+    expect(doc.querySelector('form')).not.toHaveAttribute('action');
+    expect(doc.querySelector('button[type="submit"]')).toBeDisabled();
+    expect(html).toMatch(/<noscript>.*LinkedIn.*<\/noscript>/s);
+    expect(html).toContain(`href="${profile.links.linkedin}"`);
+  });
+
+  it('enables the push button once hydrated', () => {
+    renderTerminal();
+    expect(screen.getByRole('button', { name: 'git push' })).toBeEnabled();
   });
 
   it('has an accessible name for the form itself', () => {

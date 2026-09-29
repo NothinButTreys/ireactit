@@ -1,3 +1,4 @@
+import { profile } from '../../src/content/profile';
 import { expect, test } from '../fixtures';
 
 test.describe('reduced motion', () => {
@@ -26,6 +27,18 @@ test.describe('without JavaScript', () => {
     await expect(page.getByText(/template-driven editor/).first()).toBeVisible();
     await expect(page.locator('#commit form')).toBeVisible();
   });
+
+  test('the contact form cannot submit natively, so nothing leaks into a URL; LinkedIn is offered instead', async ({ page }) => {
+    await page.goto('/');
+    const form = page.getByRole('form', { name: 'Contact form' });
+    await expect(form).toHaveAttribute('method', 'post');
+    await expect(form.getByRole('button', { name: 'git push' })).toBeDisabled();
+    await expect(form.getByRole('link', { name: /LinkedIn/ })).toBeVisible();
+    await expect(form.getByRole('link', { name: /LinkedIn/ })).toHaveAttribute('href', profile.links.linkedin);
+    await form.getByLabel(/--author/).fill('Ada');
+    await form.getByLabel(/--author/).press('Enter');
+    expect(new URL(page.url()).search).toBe('');
+  });
 });
 
 test.describe('app bundle fails to load', () => {
@@ -38,6 +51,8 @@ test.describe('app bundle fails to load', () => {
     await expect(page.getByText('feels effortless.')).toHaveCSS('opacity', '1');
     await expect(page.locator('#write [data-reveal]').first()).toHaveCSS('opacity', '1');
     expect(await page.evaluate(() => document.documentElement.classList.contains('js'))).toBe(false);
+    // The bundle never hydrated, so the prerendered push button stays disabled: no native GET with PII in the URL.
+    await expect(page.getByRole('button', { name: 'git push' })).toBeDisabled();
   });
 });
 

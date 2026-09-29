@@ -1,5 +1,6 @@
 import { useId, useRef, type KeyboardEvent } from 'react';
 import { profile } from '@/content/profile';
+import { useHydrated } from '@/lib/useHydrated';
 import type { CommitState, RejectReason } from './commitForm';
 import { useCommitForm } from './useCommitForm';
 
@@ -45,6 +46,9 @@ export function CommitTerminal() {
   const { state, edit, submit } = useCommitForm();
   const id = useId();
   const sending = state.status === 'sending';
+  // Disabled in the prerendered HTML and the hydration pass, so a visitor without JS (or before hydration, or on the
+  // failsafe path) can't trigger a native submit; a disabled default button also blocks implicit Enter submission.
+  const hydrated = useHydrated();
 
   const nameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
@@ -80,6 +84,7 @@ export function CommitTerminal() {
 
   return (
     <form
+      method="post"
       noValidate
       aria-label="Contact form"
       onSubmit={(e) => {
@@ -155,12 +160,21 @@ export function CommitTerminal() {
           <span className="hidden font-mono text-xs text-muted sm:inline">⌘⏎ to push · replies go to your email</span>
           <button
             type="submit"
-            disabled={sending}
+            disabled={!hydrated || sending}
             className="h-12 rounded-[10px] bg-primary px-[22px] font-mono text-sm font-bold text-bg transition-transform duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60"
           >
             git push
           </button>
         </div>
+        <noscript>
+          <p className="pt-3 font-mono text-xs text-muted">
+            The terminal needs JavaScript. Reach me on{' '}
+            <a href={profile.links.linkedin} target="_blank" rel="noreferrer" className="text-primary underline-offset-4 hover:underline">
+              LinkedIn ↗
+            </a>
+            .
+          </p>
+        </noscript>
       </div>
       <PushLog state={state} />
     </form>
