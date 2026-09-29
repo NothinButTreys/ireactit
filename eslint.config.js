@@ -16,4 +16,31 @@ export default defineConfig([
       'react-refresh/only-export-components': ['warn', { allowExportNames: ['useRenderCount', 'useViewSource'] }],
     },
   },
+  {
+    // Server-chain files: Vercel compiles functions without Vite's resolver, so
+    // these must use relative imports with `.js` extensions and never `@/`.
+    // See .superpowers/sdd/global-constraints.md.
+    files: [
+      'api/**/*.ts',
+      'src/features/contact/server/**/*.ts',
+      'src/lib/contactSchema.ts',
+      'src/lib/rateLimit.ts',
+      'src/lib/safeEqual.ts',
+    ],
+    ignores: ['**/*.test.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['@/*'],
+              message:
+                'Server-chain files must use relative imports with .js extensions, never the @/ alias (Vercel compiles functions without Vite\'s resolver). See .superpowers/sdd/global-constraints.md.',
+            },
+          ],
+        },
+      ],
+    },
+  },
 ]);

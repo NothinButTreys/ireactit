@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "types": ["node"]
+  },
+  "include": [
+    "api/**/*.ts",
+    "src/features/contact/server/**/*.ts",
+    "src/lib/contactSchema.ts",
+    "src/lib/rateLimit.ts",
+    "src/lib/safeEqual.ts"
+  ],
+  "exclude": ["**/*.test.ts"]
+}
