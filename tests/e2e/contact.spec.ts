@@ -46,16 +46,24 @@ test('the form has an accessible name', async ({ page }) => {
   await expect(page.getByRole('form', { name: 'Contact form' })).toBeVisible();
 });
 
-test('the inputs meet the 44px touch target at mobile widths', async ({ page }) => {
-  await page.setViewportSize({ width: 375, height: 900 });
-  // The terminal is wrapped in a <Reveal>, which briefly scales it down until its own
-  // IntersectionObserver fires; wait for that to settle before measuring the steady state.
-  await expect(page.locator('#commit [data-reveal]').last()).toHaveAttribute('data-shown', '');
-  await page.waitForTimeout(600); // let the reveal's 500ms scale/opacity/blur transition finish
-  for (const label of [/--author/, /--email/, /-m/]) {
-    const box = await page.getByLabel(label).boundingBox();
-    expect(box!.height).toBeGreaterThanOrEqual(44);
-  }
+test.describe('at a phone width', () => {
+  // Load at this size (the beforeEach deep-links to #commit): resizing after the jump reflows the page above
+  // #commit ~1800px taller and leaves the terminal off-screen, so its reveal would never fire.
+  test.use({ viewport: { width: 375, height: 900 } });
+
+  test('the inputs meet the 44px touch target', async ({ page }) => {
+    // The terminal is wrapped in a <Reveal delay={120}>, which scales it to 0.98 until it has been seen;
+    // wait for its delayed transition to finish (120ms + 500ms), then measure the steady state.
+    const reveal = page.locator('#commit [data-reveal]').last();
+    await expect(reveal).toHaveAttribute('data-shown', '');
+    await reveal.evaluate((el) => Promise.all(el.getAnimations().map((a) => a.finished)));
+    for (const label of [/--author/, /--email/, /-m/]) {
+      // The layout height from the page itself: Playwright's boundingBox() goes through device pixels
+      // (DPR 2.625 on Pixel 7) and reads a 44px box as 43.99993896484375 at some scroll offsets.
+      const height = await page.getByLabel(label).evaluate((el) => el.getBoundingClientRect().height);
+      expect(height).toBeGreaterThanOrEqual(44);
+    }
+  });
 });
 
 test('invalid input never reaches the network', async ({ page }) => {
