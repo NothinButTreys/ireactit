@@ -153,7 +153,7 @@ Four personas walk the real site after **every deployment**: [`deploy-check`](.g
 
 ## Run it locally
 
-Requires Node 20.19+ and pnpm 9.
+Requires Node 22.22+ (`nvm use` reads `.nvmrc`) and pnpm 9.
 
 ```bash
 pnpm install
