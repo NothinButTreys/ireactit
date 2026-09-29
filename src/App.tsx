@@ -1,11 +1,12 @@
 import { CareerTree } from '@/features/career-tree/CareerTree';
+import { CommitSection } from '@/features/contact/CommitSection';
+import { Footer } from '@/features/footer/Footer';
 import { Hero } from '@/features/hero/Hero';
 import { WriteSection } from '@/features/ide/WriteSection';
 import { Nav } from '@/features/nav/Nav';
 import { Projects } from '@/features/projects/Projects';
 import { SmoothScroll } from '@/lib/SmoothScroll';
 import { Section } from '@/ui/Section';
-import { SectionHeader } from '@/ui/SectionHeader';
 import { Providers } from './Providers';
 
 export function App() {
@@ -17,7 +18,7 @@ export function App() {
       <main
         id="main"
         tabIndex={-1}
-        className="mx-auto max-w-[78rem] px-4 pt-14 pb-[30vh] outline-none md:px-8 md:pb-0"
+        className="mx-auto max-w-[78rem] px-4 pt-14 pb-24 outline-none md:px-8 md:pb-0"
       >
         <Section id="mount" className="flex min-h-svh items-center py-16">
           <Hero />
@@ -32,9 +33,10 @@ export function App() {
           <Projects />
         </Section>
         <Section id="commit" className="py-24">
-          <SectionHeader step="commit" />
+          <CommitSection />
         </Section>
       </main>
+      <Footer />
     </Providers>
   );
 }
