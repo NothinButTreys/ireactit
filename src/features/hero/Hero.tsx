@@ -24,7 +24,7 @@ export function Hero() {
           <TagTokens text={output} />
           <span className="caret inline-block h-[18px] w-[9px] bg-primary" />
         </p>
-        <h1 id="mount-title" data-hero-mount="" className="text-[64px] leading-[0.95] font-bold tracking-[-0.045em] md:text-[120px]">
+        <h1 id="mount-title" className="text-[64px] leading-[0.95] font-bold tracking-[-0.045em] md:text-[120px]">
           {profile.greeting}
         </h1>
         <p data-hero-mount="" style={delay(90)} className="max-w-[620px] text-[21px] leading-[1.3] text-muted md:text-[30px]">

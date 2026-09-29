@@ -29,6 +29,7 @@ describe('<Hero />', () => {
   it('renders the greeting as the page h1, the subline, badges and both CTAs', () => {
     renderHero();
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent("Hi, I'm Trey.");
+    expect(screen.getByRole('heading', { level: 1 })).not.toHaveAttribute('data-hero-mount');
     expect(screen.getByText('feels effortless.')).toBeInTheDocument();
     expect(screen.getByText('CXO @ PixelTable')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Inspect my work/ })).toHaveAttribute('href', '#props');

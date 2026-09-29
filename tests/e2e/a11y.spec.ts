@@ -10,12 +10,29 @@ async function expectNoViolations(page: Page) {
   expect(blocking, JSON.stringify(blocking, null, 2)).toEqual([]);
 }
 
+/** Scrolls the whole page so every `[data-reveal]` mounts, then returns to the top. */
+async function scrollWholePage(page: Page) {
+  await page.evaluate(async () => {
+    for (let y = 0; y < document.body.scrollHeight; y += window.innerHeight / 2) {
+      window.scrollTo(0, y);
+      await new Promise((r) => requestAnimationFrame(() => r(null)));
+    }
+    window.scrollTo(0, 0);
+  });
+  // Let every reveal's opacity/transform/filter transition settle (≤500ms, ≤150ms reduced) before
+  // scanning — axe reads the computed colour at that instant, and a mid-transition opacity reads
+  // as a false contrast violation.
+  await expect(page.locator('[data-reveal]:not([data-shown])')).toHaveCount(0);
+  await page.waitForTimeout(600);
+}
+
 for (const theme of ['dark', 'light'] as const) {
   test.describe(`${theme} theme`, () => {
     test.beforeEach(async ({ page }) => {
       await page.emulateMedia({ colorScheme: theme, reducedMotion: 'reduce' });
       await page.goto('/');
       await expect(page.locator('[data-hero]')).toHaveAttribute('data-mounted', '');
+      await scrollWholePage(page);
     });
 
     test('page', async ({ page }) => {
@@ -38,6 +55,14 @@ for (const theme of ['dark', 'light'] as const) {
       await page.locator('#commit').scrollIntoViewIfNeeded();
       await page.getByRole('button', { name: 'git push' }).click();
       await expect(page.getByText('Tell me your name')).toBeVisible();
+      await expectNoViolations(page);
+    });
+
+    test('page, motion allowed', async ({ page }) => {
+      await page.emulateMedia({ colorScheme: theme, reducedMotion: 'no-preference' });
+      await page.goto('/');
+      await expect(page.locator('[data-hero]')).toHaveAttribute('data-mounted', '');
+      await scrollWholePage(page);
       await expectNoViolations(page);
     });
   });
