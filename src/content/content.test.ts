@@ -1,3 +1,5 @@
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { SECTION_COMPONENTS, SECTION_HEADERS, SECTION_IDS } from './sections';
 import { profile } from './profile';
@@ -107,7 +109,11 @@ describe('projects', () => {
     expect(p.links.length).toBeGreaterThan(0);
     for (const l of p.links) expect(l.href).toMatch(/^https:\/\//);
     expect(p.screenshot.alt.length).toBeGreaterThan(10);
-    if (p.screenshot.src) expect(p.screenshot.src).toMatch(/^\/projects\/.+\.(webp|png|jpg)$/);
+    if (p.screenshot.src) {
+      expect(p.screenshot.src).toMatch(/^\/projects\/.+\.(webp|png|jpg)$/);
+      const onDisk = join(process.cwd(), 'public', p.screenshot.src);
+      expect(existsSync(onDisk), `${p.screenshot.src} should exist under public/`).toBe(true);
+    }
     expect(Object.keys(p.nodes).sort()).toEqual([...PROJECT_NODE_KEYS].sort());
 
     const total = PROJECT_NODE_KEYS.reduce((n, k) => n + wordCount(p.nodes[k].body), 0);

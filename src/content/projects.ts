@@ -10,22 +10,30 @@ export const projects: Project[] = [
     team: 'PixelTable × Critical Role × Darrington Press',
     stack: ['React', 'TypeScript'],
     links: [{ label: 'Open the Card Creator', href: 'https://www.daggerheart.com/card-creator' }],
-    screenshot: { alt: 'The Daggerheart Card Creator editing a custom domain card' },
+    screenshot: {
+      alt: 'The Daggerheart Card Creator start screen: choose Cards or Adversaries',
+      src: '/projects/daggerheart-card-creator.jpg',
+    },
     nodes: {
       problem: {
         body: 'Daggerheart players wanted to make homebrew cards that looked and felt official, and creators publishing under the Community Game License needed a sanctioned way to produce them. Hand-built templates in image editors were slow, inconsistent and easy to get wrong.',
+        highlight: { x: 3, y: 3, w: 94, h: 94 },
       },
       myRole: {
         body: 'As CXO and Principal Engineer at PixelTable I owned the experience end to end: shaping the editor flow with Critical Role and Darrington Press, building core editor features hands-on, and keeping every template faithful to the printed game.',
+        highlight: { x: 38, y: 24, w: 24, h: 11 },
       },
       architecture: {
         body: 'A template-driven editor: each card type is described as data, and the same description drives both the live on-screen preview and the export, so what a creator sees is exactly what they download as PDF or PNG, on desktop or mobile.',
+        highlight: { x: 12, y: 34, w: 76, h: 34 },
       },
       hardParts: {
         body: 'Pixel-perfect parity between the preview and exported files across browsers, keeping text fitting and layout stable as creators type, and making a dense, print-oriented editor genuinely comfortable to use on a phone.',
+        highlight: { x: 60, y: 34, w: 30, h: 34 },
       },
       outcome: {
         body: 'Shipped as the official Daggerheart homebrew tool, with customisable templates, PDF and PNG export, and support for Community Game License submissions, so the community can create content that sits alongside official cards.',
+        highlight: { x: 18, y: 59, w: 64, h: 7 },
       },
     },
     reviewed: false,
@@ -39,7 +47,10 @@ export const projects: Project[] = [
     team: 'PixelTable',
     stack: ['React', 'TypeScript', 'Real-time messaging'],
     links: [{ label: 'Play Alice is Missing', href: 'https://aliceismissing.com' }],
-    screenshot: { alt: 'Players exchanging in-character text messages during a session' },
+    screenshot: {
+      alt: 'The Alice is Missing homepage: “Unravel the Mystery of Silent Falls” with three of the game’s characters',
+      src: '/projects/alice-is-missing.jpg',
+    },
     nodes: {
       problem: {
         body: 'Alice is Missing is a silent role-playing game: for ninety minutes players never speak and only text each other in character. Bringing that to the web meant recreating the tension of a group chat without breaking the spell of the table.',
@@ -68,7 +79,10 @@ export const projects: Project[] = [
     team: 'PixelTable',
     stack: ['React', 'TypeScript'],
     links: [{ label: 'Visit PixelTable', href: 'https://pixeltable.net' }],
-    screenshot: { alt: 'The PixelTable Support Portal showing community discussion threads' },
+    screenshot: {
+      alt: 'The PixelTable homepage: “The Table, Amplified” with a glowing d20',
+      src: '/projects/support-portal.jpg',
+    },
     nodes: {
       problem: {
         body: 'Players across PixelTable titles had nowhere shared to ask questions, report issues or talk about the games, and the team had no single place to hear from them. Support and community conversations were scattered.',
@@ -97,7 +111,10 @@ export const projects: Project[] = [
     team: 'PixelTable',
     stack: ['React', 'TypeScript', 'Search & data'],
     links: [{ label: 'Explore the Library', href: 'https://www.thenaturalworldlibrary.com/' }],
-    screenshot: { alt: 'A species entry in the Natural World Library field guide' },
+    screenshot: {
+      alt: 'The Natural World Library shown on three phone screens, including the Herbalist’s Primer',
+      src: '/projects/natural-world-library.jpg',
+    },
     nodes: {
       problem: {
         body: 'Amateur enthusiasts and professional researchers needed one trustworthy place to identify fungi, plants, herbs and minerals: a reference deep enough for experts yet approachable for someone standing in a forest with a phone.',

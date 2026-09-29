@@ -43,6 +43,17 @@ test('the focused root treeitem is ringed on its label row only, not outlined on
   expect(boxShadow).not.toBe('none');
 });
 
+test('every project card screenshot loads', async ({ page }) => {
+  const cards = page.locator('#props article');
+  const count = await cards.count();
+  expect(count).toBeGreaterThan(0);
+  for (let i = 0; i < count; i++) {
+    const img = cards.nth(i).locator('img');
+    await img.scrollIntoViewIfNeeded();
+    await expect.poll(() => img.evaluate((el: HTMLImageElement) => el.naturalWidth)).toBeGreaterThan(0);
+  }
+});
+
 test('the page behind the inspector does not scroll', async ({ page }) => {
   await page.getByRole('button', { name: /Inspect Alice is Missing/ }).click();
   await expect(page.getByRole('dialog')).toBeVisible();
