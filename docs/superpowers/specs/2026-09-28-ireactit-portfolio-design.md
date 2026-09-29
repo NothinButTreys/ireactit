@@ -104,7 +104,7 @@ The first draft of the case-study copy is written from public PixelTable materia
 | `--primary` | 193 95% 60% | React cyan: links, focus, active rail, highlight box |
 | `--success` | 160 84% 45% | PixelTable emerald: "rendered", delivered, syntax strings |
 | `--accent` | 42 96% 58% | PixelTable amber: highlights, warnings, syntax props |
-| `--danger` | 0 72% 51% | errors |
+| `--danger` | 0 72% 58% | errors (raised from 51% for AA contrast on dark bg, Plan 2 Task 9) |
 
 The light theme uses matching tokens tuned for AA contrast. The theme follows `prefers-color-scheme`, a toggle overrides it, and the choice is persisted in localStorage.
 
