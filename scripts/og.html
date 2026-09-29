@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>og</title>
+    <style>
+      @font-face {
+        font-family: 'Space Grotesk Variable';
+        font-style: normal;
+        font-weight: 300 700;
+        font-display: block;
+        src: url('../node_modules/@fontsource-variable/space-grotesk/files/space-grotesk-latin-wght-normal.woff2') format('woff2-variations');
+      }
+
+      @font-face {
+        font-family: 'JetBrains Mono Variable';
+        font-style: normal;
+        font-weight: 300 700;
+        font-display: block;
+        src: url('../node_modules/@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2') format('woff2-variations');
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        width: 1200px;
+        height: 630px;
+        overflow: hidden;
+      }
+
+      body {
+        background-color: hsl(222 47% 4%);
+        background-image: radial-gradient(hsl(190 30% 94% / 0.14) 1.5px, transparent 1.5px);
+        background-size: 28px 28px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 0 96px;
+        font-family: 'Space Grotesk Variable', system-ui, sans-serif;
+        color: hsl(190 30% 94%);
+      }
+
+      .wordmark {
+        font-size: 96px;
+        font-weight: 600;
+        line-height: 1;
+        margin-bottom: 32px;
+        white-space: nowrap;
+      }
+
+      .wordmark .bracket {
+        color: hsl(193 95% 60%);
+      }
+
+      .greeting {
+        font-size: 56px;
+        font-weight: 600;
+        margin-bottom: 20px;
+      }
+
+      .tagline {
+        font-size: 30px;
+        color: hsl(215 16% 62%);
+        margin-bottom: 48px;
+      }
+
+      .cycle {
+        font-family: 'JetBrains Mono Variable', ui-monospace, monospace;
+        font-size: 26px;
+        color: hsl(42 96% 58%);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wordmark"><span class="bracket">&lt;</span>IReactIt<span class="bracket">/&gt;</span></div>
+    <div class="greeting">Hi, I'm Trey.</div>
+    <div class="tagline">Principal Engineer · I build React that feels effortless.</div>
+    <div class="cycle">mount &rarr; write &rarr; tree &rarr; props &rarr; commit</div>
+  </body>
+</html>

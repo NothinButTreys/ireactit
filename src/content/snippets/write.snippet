@@ -1,0 +1,20 @@
+// src/features/ide/TreyEditor.tsx
+export function TreyEditor() {
+  const [props, setProps] = useState(DEFAULT_TREY);
+  const bump = useBump();
+
+  function update(action: TreyAction) {
+    const next = treyReducer(props, action);
+    if (next === props) return; // no-op: nothing to re-render
+    setProps(next);
+    bump();
+  }
+
+  return (
+    <>
+      <CodeView lines={treySourceLines(props)} />
+      <PropControls value={props} onChange={update} />
+      <LivePreview value={props} />
+    </>
+  );
+}

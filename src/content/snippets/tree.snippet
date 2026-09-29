@@ -1,0 +1,27 @@
+// src/features/career-tree/CareerTree.tsx
+export function CareerTree() {
+  const ref = useRef<HTMLDivElement>(null);
+  // html.js + large, tall viewport (the same condition as the CSS `pinned:` variant) + motion allowed
+  const pinned = usePinnable() && !usePrefersReducedMotion();
+  const mounted = useCareerProgress(ref, TOTAL, pinned);
+
+  // One markup in both modes: `pinned:` classes switch the layout, so hydrating never shifts it.
+  return (
+    <div ref={ref} className="career-pin" data-pinned={pinned ? '' : undefined}>
+      <div className="career-sticky grid lg:grid-cols-[4fr_8fr] pinned:grid-cols-[7fr_5fr]">
+        <ol>
+          {recent.map((role, i) => (
+            <TreeNode
+              key={role.component}
+              role={role}
+              mounted={i < mounted}
+              newest={pinned && i === mounted - 1}
+            />
+          ))}
+          <EarlyCareerNode roles={early} mounted={mounted === TOTAL} />
+        </ol>
+        <DetailPane active={pinned} role={recent[mounted - 1]} early={early} />
+      </div>
+    </div>
+  );
+}

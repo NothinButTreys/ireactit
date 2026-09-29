@@ -1,0 +1,327 @@
+@import 'tailwindcss';
+
+:root {
+  --bg: 222 47% 4%;
+  --card: 221 39% 7%;
+  --border: 218 28% 14%;
+  --fg: 190 30% 94%;
+  --muted: 215 16% 62%;
+  --primary: 193 95% 60%;
+  --success: 160 84% 45%;
+  --accent: 42 96% 58%;
+  --danger: 0 72% 58%;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --syntax-keyword: 276 68% 75%;
+  color-scheme: dark;
+}
+
+:root[data-theme='light'] {
+  --bg: 210 40% 98%;
+  --card: 0 0% 100%;
+  --border: 214 32% 88%;
+  --fg: 222 47% 8%;
+  --muted: 215 19% 35%;
+  --primary: 195 90% 30%;
+  --success: 160 84% 26%;
+  --accent: 32 95% 30%;
+  --danger: 0 72% 42%;
+  --syntax-keyword: 276 50% 42%;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme='dark']) {
+    --bg: 210 40% 98%;
+    --card: 0 0% 100%;
+    --border: 214 32% 88%;
+    --fg: 222 47% 8%;
+    --muted: 215 19% 35%;
+    --primary: 195 90% 30%;
+    --success: 160 84% 26%;
+    --accent: 32 95% 30%;
+    --danger: 0 72% 42%;
+    --syntax-keyword: 276 50% 42%;
+    color-scheme: light;
+  }
+}
+
+@theme inline {
+  --color-bg: hsl(var(--bg));
+  --color-card: hsl(var(--card));
+  --color-border: hsl(var(--border));
+  --color-fg: hsl(var(--fg));
+  --color-muted: hsl(var(--muted));
+  --color-primary: hsl(var(--primary));
+  --color-success: hsl(var(--success));
+  --color-accent: hsl(var(--accent));
+  --color-danger: hsl(var(--danger));
+  --font-display: 'Space Grotesk Variable', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html {
+  background: hsl(var(--bg));
+}
+
+body {
+  color: hsl(var(--fg));
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* In Tailwind's `@layer base`, not the page's unlayered CSS, so a utility like `outline-none`
+   (Tailwind's `@layer utilities`, which cascades after `base` regardless of source order or
+   specificity) can still turn this off per-element — e.g. ComponentTree's root treeitem, whose
+   ring is drawn on its label row instead. */
+@layer base {
+  :focus-visible {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 3px;
+  }
+}
+
+/* ---------- Motion (CSS-first). Hidden states live under html.js so no-JS/prerendered HTML stays visible. ----------
+   [data-hero-mount] shares this rule (Hero's subline/badges/CTAs/render log, revealed once the tag finishes
+   typing); the h1 itself is never hidden, so it's excluded from the .js hidden-state selector. */
+[data-reveal],
+[data-hero-mount] {
+  transition:
+    opacity 500ms var(--ease),
+    transform 500ms var(--ease),
+    filter 500ms var(--ease);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.js [data-no-js-only],
+.hydrated [data-no-js-only] {
+  display: none;
+}
+
+.js [data-reveal]:not([data-shown]),
+.js [data-hero]:not([data-mounted]) [data-hero-mount] {
+  opacity: 0;
+  transform: scale(0.98);
+  filter: blur(4px);
+}
+
+/* A slow phone can paint the prerendered HTML while the parser is still inside the hero. The hero is vertically
+   centred, so each chunk parsed after that paint would grow and re-centre it (layout shift). Keep the whole
+   section invisible (hiding only [data-hero] still counts its centred wrapper's shift) until the hero's last
+   element ([data-hero-end]) is parsed; it's then painted once, already in its final place. Pure CSS, so it
+   works in every engine and without JS; engines without :has() ignore the rule. */
+#mount:not(:has([data-hero-end])) {
+  visibility: hidden;
+}
+
+@keyframes mount-in {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+    filter: blur(4px);
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+.mount-in {
+  animation: mount-in 500ms var(--ease) both;
+}
+
+@keyframes caret-blink {
+  50% {
+    opacity: 0;
+  }
+}
+.caret {
+  animation: caret-blink 1.1s steps(1) infinite;
+}
+
+/* Pulses dim and back to full opacity — it must rest at opacity 1, not 0.6, or the resting
+   text-on-card contrast drops below AA (caught by the a11y suite with real motion allowed). */
+@keyframes flash {
+  50% {
+    opacity: 0.6;
+  }
+}
+.flash {
+  animation: flash 600ms var(--ease);
+}
+
+.dots {
+  background-image: radial-gradient(hsl(var(--border)) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+@keyframes drift {
+  to {
+    transform: translate3d(24px, 24px, 0);
+  }
+}
+.dots-drift {
+  position: fixed;
+  inset: -24px;
+  z-index: -1;
+  pointer-events: none;
+  background-image: radial-gradient(hsl(var(--border)) 1px, transparent 1px);
+  background-size: 24px 24px;
+  /* 24px over 90s is ~0.27px/s: step a quarter pixel about once a second (96 steps) rather than every frame,
+     which is invisible but spares GPU-less and low-power browsers a full-viewport repaint each frame. */
+  animation: drift 90s steps(96) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal],
+  [data-hero-mount] {
+    transition: opacity 150ms linear;
+    transition-delay: 0ms;
+  }
+  .js [data-reveal]:not([data-shown]),
+  .js [data-hero]:not([data-mounted]) [data-hero-mount] {
+    transform: none;
+    filter: none;
+  }
+  .mount-in {
+    animation: fade-in 150ms linear both;
+  }
+  .caret,
+  .flash,
+  .dots-drift {
+    animation: none;
+  }
+}
+
+/* ---------- Syntax tokens (IDE + inspector) ---------- */
+.tok-kw {
+  color: hsl(var(--syntax-keyword));
+}
+.tok-tag {
+  color: hsl(var(--primary));
+}
+.tok-prop,
+.tok-num {
+  color: hsl(var(--accent));
+}
+.tok-str {
+  color: hsl(var(--success));
+}
+.tok-punct {
+  color: hsl(var(--muted));
+}
+
+/* IDE: code lines stagger in the first time the editor is seen (JS only). */
+.code-line {
+  transition:
+    opacity 300ms var(--ease),
+    transform 300ms var(--ease);
+  transition-delay: calc(var(--i, 0) * 55ms);
+}
+.js .code-view:not([data-typed]) .code-line {
+  opacity: 0;
+  transform: translateX(-6px);
+}
+.radio-chip:has(input:focus-visible) > span {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .code-line {
+    transition: opacity 150ms linear;
+    transition-delay: 0ms;
+  }
+  .js .code-view:not([data-typed]) .code-line {
+    transform: none;
+  }
+}
+
+/* Career tree: pinned and scroll-driven only where its fixed-geometry stage fits under the nav — JS running
+   (html.js), motion allowed, lg and tall. The em sizes mirror PINNABLE_QUERY in usePinnable.ts (which also
+   requires html.js). The tree renders one markup in both modes; `pinned:` utilities switch the layout, so
+   prerender, hydration and crossing the threshold never swap subtrees or shift layout. */
+@custom-variant pinned {
+  @media (min-width: 64em) and (min-height: 47.5em) and (prefers-reduced-motion: no-preference),
+    (min-width: 75em) and (min-height: 43.75em) and (prefers-reduced-motion: no-preference) {
+    &:where(.js *) {
+      @slot;
+    }
+  }
+}
+.career-pin {
+  @variant pinned {
+    height: 300svh;
+  }
+}
+.career-sticky {
+  @variant pinned {
+    position: sticky;
+    top: 3.5rem;
+    height: calc(100svh - 3.5rem);
+    overflow: hidden;
+  }
+}
+
+/* Inspector: native modal <dialog> as a bottom sheet (full screen on phones). */
+dialog.inspector {
+  margin: auto auto 0;
+  width: min(100% - 6rem, 1344px);
+  max-width: none;
+  height: min(70vh, 640px);
+  max-height: none;
+  padding: 0;
+  border: 1px solid hsl(var(--border));
+  border-bottom: 0;
+  border-radius: 18px 18px 0 0;
+  background: hsl(var(--card));
+  color: hsl(var(--fg));
+  box-shadow: 0 -24px 80px rgb(0 0 0 / 0.5);
+}
+dialog.inspector::backdrop {
+  background: rgb(2 4 8 / 0.55);
+}
+dialog.inspector[open] .inspector-sheet {
+  animation: sheet-in 420ms var(--ease) both;
+}
+@keyframes sheet-in {
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+}
+html[data-inspector-open] {
+  overflow: hidden;
+}
+@media (max-width: 767px) {
+  dialog.inspector {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+    border: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  dialog.inspector[open] .inspector-sheet {
+    animation: fade-in 150ms linear both;
+  }
+}
+
+/* Shiki css-variables theme → site tokens (follows light/dark). */
+:root {
+  --shiki-foreground: hsl(var(--fg));
+  --shiki-background: transparent;
+  --shiki-token-keyword: hsl(var(--syntax-keyword));
+  --shiki-token-string: hsl(var(--success));
+  --shiki-token-string-expression: hsl(var(--success));
+  --shiki-token-constant: hsl(var(--accent));
+  --shiki-token-parameter: hsl(var(--accent));
+  --shiki-token-function: hsl(var(--primary));
+  --shiki-token-comment: hsl(var(--muted));
+  --shiki-token-punctuation: hsl(var(--muted));
+  --shiki-token-link: hsl(var(--primary));
+}
+.source-code pre {
+  margin: 0;
+  background: transparent !important;
+}

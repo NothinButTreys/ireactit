@@ -1,0 +1,27 @@
+// src/features/contact/useCommitForm.ts
+export function useCommitForm() {
+  const [state, dispatch] = useReducer(commitReducer, initialCommit);
+  const bump = useBump();
+  const inFlight = useRef(false); // one commit at a time, even on a double click
+
+  async function submit() {
+    if (state.status === 'sending' || inFlight.current) return null;
+    const errors = validateCommit(state.fields); // same zod schema as the API
+    if (errors) {
+      dispatch({ type: 'invalid', errors });
+      return firstInvalidField(errors); // the caller moves focus there
+    }
+    inFlight.current = true;
+    try {
+      dispatch({ type: 'send' });
+      const result = await postCommit(state.fields);
+      dispatch(result); // delivered | invalid | rejected (keeps your message)
+      if (result.type === 'delivered') bump();
+      return result.type === 'invalid' ? firstInvalidField(result.errors) : null;
+    } finally {
+      inFlight.current = false;
+    }
+  }
+
+  return { state, submit };
+}

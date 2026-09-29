@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="840" height="200" viewBox="0 0 840 200" role="img" aria-labelledby="title">
+  <title id="title">&lt;IReactIt/&gt; — rendered in 1 commit</title>
+  <style>
+    .mono { font-family: JetBrains Mono, ui-monospace, monospace; }
+    .p { fill: #48566a; }
+    .t { fill: #086f91; }
+    .muted { fill: #48566a; }
+    .ok { fill: #0b7a55; }
+    @media (prefers-reduced-motion: no-preference) {
+      .ch { opacity: 0; animation: type 1ms linear forwards; }
+      .cursor { animation: advance 880ms steps(11, jump-start) forwards, blink 1s steps(1, end) 880ms infinite; transform: translateX(-396px); }
+      .pill { opacity: 0; animation: fade 400ms cubic-bezier(0.22, 1, 0.36, 1) 1880ms forwards; }
+      @keyframes type { to { opacity: 1; } }
+      @keyframes advance { from { transform: translateX(-396px); } to { transform: translateX(0); } }
+      @keyframes blink { 50% { opacity: 0; } }
+      @keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+    }
+  </style>
+  <rect x="0.5" y="0.5" width="839" height="199" rx="16" fill="#f8fafc" stroke="#d7dfea"/>
+  <text class="mono muted" x="48" y="46" font-size="14">// ireactit.com — a portfolio shaped like React's render cycle</text>
+  <text class="mono" y="122" font-size="60" font-weight="700"><tspan class="ch p" x="48" style="animation-delay:0ms">&lt;</tspan><tspan class="ch t" x="84" style="animation-delay:80ms">I</tspan><tspan class="ch t" x="120" style="animation-delay:160ms">R</tspan><tspan class="ch t" x="156" style="animation-delay:240ms">e</tspan><tspan class="ch t" x="192" style="animation-delay:320ms">a</tspan><tspan class="ch t" x="228" style="animation-delay:400ms">c</tspan><tspan class="ch t" x="264" style="animation-delay:480ms">t</tspan><tspan class="ch t" x="300" style="animation-delay:560ms">I</tspan><tspan class="ch t" x="336" style="animation-delay:640ms">t</tspan><tspan class="ch p" x="372" style="animation-delay:720ms">/</tspan><tspan class="ch p" x="408" style="animation-delay:800ms">&gt;</tspan></text>
+  <rect class="cursor" x="450" y="76" width="14" height="56" rx="1" fill="#086f91"/>
+  <g class="pill">
+    <rect x="558" y="84" width="234" height="36" rx="18" fill="#ffffff" stroke="#0b7a55" stroke-opacity="0.6"/>
+    <text class="mono ok" x="675" y="107" font-size="15" text-anchor="middle">✓ rendered in 1 commit</text>
+  </g>
+  <text class="mono muted" x="48" y="170" font-size="13">mount → write → tree → props → commit</text>
+</svg>

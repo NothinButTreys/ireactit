@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Trey McBride · IReactIt</title>
+    <meta name="description" content="Trey McBride, Principal Engineer. I build React that feels effortless." />
+    <link rel="canonical" href="https://ireactit.com/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://ireactit.com/" />
+    <meta property="og:title" content="Trey McBride · IReactIt" />
+    <meta property="og:description" content="Principal Engineer. I build React that feels effortless." />
+    <meta property="og:image" content="https://ireactit.com/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="&lt;IReactIt/&gt;: Trey McBride, Principal Engineer" />
+    <meta name="twitter:image" content="https://ireactit.com/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <!-- Preload the latin display and mono faces so text is in its final font before the first layout
+         (and before a #hash deep link scrolls), instead of swapping and shifting what's above the target. -->
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="/node_modules/@fontsource-variable/space-grotesk/files/space-grotesk-latin-wght-normal.woff2" />
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="/node_modules/@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2" />
+    <script>
+      document.documentElement.classList.add('js');
+      setTimeout(function () {
+        if (!document.documentElement.classList.contains('hydrated')) document.documentElement.classList.remove('js');
+      }, 3000);
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <div id="root"><!--app-html--></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
