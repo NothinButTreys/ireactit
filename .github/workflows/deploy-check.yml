@@ -6,6 +6,7 @@ jobs:
   deploy-check:
     if: github.event.deployment_status.state == 'success' && github.event.deployment.creator.login == 'vercel[bot]'
     runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:v1.63.0-noble
     timeout-minutes: 20
     concurrency:
       group: deploy-check-${{ github.event.deployment.id }}
@@ -25,14 +26,13 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm exec playwright install --with-deps chromium webkit
       - name: Run against deployment
         run: |
           echo "Testing $DEPLOY_ENV deployment at $BASE_URL"
           if [ "$DEPLOY_ENV" = "Production" ]; then
             pnpm e2e:ditl
           else
-            pnpm exec playwright test tests/e2e tests/ditl
+            pnpm exec playwright test tests/e2e tests/ditl tests/visual
           fi
       - uses: actions/upload-artifact@v4
         if: failure()

@@ -17,6 +17,7 @@
     "coverage": "vitest run --coverage",
     "e2e": "playwright test",
     "e2e:ditl": "playwright test tests/ditl",
+    "visual:update": "bash scripts/visual-update.sh",
     "check:bundle": "tsx scripts/check-bundle.ts",
     "check:csp": "tsx scripts/check-csp.ts",
     "og": "tsx scripts/render-og.ts"
