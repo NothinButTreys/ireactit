@@ -28,6 +28,19 @@ test.describe('without JavaScript', () => {
   });
 });
 
+test.describe('app bundle fails to load', () => {
+  test.use({ allowConsoleErrors: [/Failed to load resource|net::ERR_FAILED/] });
+
+  test('falls back to visible content after the 3s failsafe', async ({ page }) => {
+    await page.route('**/assets/index-*.js', (route) => route.abort());
+    await page.goto('/');
+    await page.waitForTimeout(3500);
+    await expect(page.getByText('feels effortless.')).toHaveCSS('opacity', '1');
+    await expect(page.locator('#write [data-reveal]').first()).toHaveCSS('opacity', '1');
+    expect(await page.evaluate(() => document.documentElement.classList.contains('js'))).toBe(false);
+  });
+});
+
 test('scrolling the whole page top to bottom raises no errors and reveals everything', async ({ page }) => {
   await page.goto('/');
   await page.evaluate(async () => {

@@ -23,3 +23,4 @@ if (container.firstElementChild) {
 } else {
   createRoot(container).render(app);
 }
+document.documentElement.classList.add('hydrated');
