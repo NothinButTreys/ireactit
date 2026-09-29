@@ -2,6 +2,7 @@ import { Suspense, useState } from 'react';
 import { projects } from '@/content/projects';
 import type { Project } from '@/content/types';
 import { useBump } from '@/features/render-counter/RenderCounter';
+import { ErrorBoundary } from '@/ui/ErrorBoundary';
 import { Reveal } from '@/ui/Reveal';
 import { SectionHeader } from '@/ui/SectionHeader';
 import { InspectorPanel } from './lazyInspector';
@@ -34,9 +35,11 @@ export function Projects() {
           </Reveal>
         ))}
       </div>
-      <Suspense fallback={null}>
-        {open && <InspectorPanel project={open.project} opener={open.opener} onClose={() => setOpen(null)} />}
-      </Suspense>
+      <ErrorBoundary fallback={null}>
+        <Suspense fallback={null}>
+          {open && <InspectorPanel project={open.project} opener={open.opener} onClose={() => setOpen(null)} />}
+        </Suspense>
+      </ErrorBoundary>
     </div>
   );
 }

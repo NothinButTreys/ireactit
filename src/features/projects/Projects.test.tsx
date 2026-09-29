@@ -30,7 +30,7 @@ describe('<Projects />', () => {
     const dialog = await screen.findByRole('dialog', { name: new RegExp(projects[1]!.name) });
     expect(dialog).toBeInTheDocument();
     expect(screen.getByText('renders: 1')).toBeInTheDocument();
-    await userEvent.click(screen.getByRole('button', { name: 'Close inspector' }));
+    await userEvent.click(screen.getByRole('button', { name: /close inspector/i }));
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
   });
 });

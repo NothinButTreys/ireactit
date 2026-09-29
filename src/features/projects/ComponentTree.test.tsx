@@ -35,6 +35,13 @@ describe('<ComponentTree />', () => {
     expect(items[1]).toHaveAttribute('tabindex', '-1');
   });
 
+  it('gives the root treeitem an accessible name of just the component name, with the ring on the focusable root', () => {
+    render(<Harness />);
+    const root = screen.getAllByRole('treeitem')[0]!;
+    expect(root).toHaveAccessibleName(`<${project.name}>`);
+    expect(root).toHaveClass('focus-visible:ring-2');
+  });
+
   it('moves focus with arrows and selects with Enter', async () => {
     const onSelect = vi.fn();
     render(<Harness onSelect={onSelect} />);
@@ -60,5 +67,18 @@ describe('<ComponentTree />', () => {
     render(<Harness onSelect={onSelect} />);
     await userEvent.click(screen.getByText('<Outcome />'));
     expect(onSelect).toHaveBeenLastCalledWith('outcome');
+  });
+
+  it('follows a selection changed from outside the tree without stealing DOM focus', () => {
+    const { rerender } = render(<ComponentTree project={project} selected="root" onSelect={() => {}} />);
+    const outside = document.createElement('button');
+    document.body.append(outside);
+    outside.focus();
+    expect(document.activeElement).toBe(outside);
+    rerender(<ComponentTree project={project} selected="architecture" onSelect={() => {}} />);
+    const architectureItem = screen.getByText('<Architecture />').closest('[role="treeitem"]');
+    expect(architectureItem).toHaveAttribute('tabindex', '0');
+    expect(document.activeElement).toBe(outside);
+    outside.remove();
   });
 });

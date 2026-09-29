@@ -54,7 +54,7 @@ export function InspectorPanel({ project, opener, onClose }: Props) {
           </div>
           <button
             type="button"
-            aria-label="Close inspector"
+            aria-label="Esc — close inspector"
             onClick={() => ref.current?.close()}
             className="h-11 rounded-lg border border-border px-2.5 font-mono text-xs text-muted hover:text-fg md:h-9"
           >

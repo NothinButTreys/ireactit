@@ -1,12 +1,16 @@
-import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
+import { useEffect, useId, useRef, useState, type KeyboardEvent } from 'react';
 import { PROJECT_NODE_KEYS, type Project } from '@/content/types';
 import { INSPECTOR_KEYS, nodeLabel, type InspectorKey } from './inspectorKeys';
 import { treeKey, type TreeState } from './treeNav';
 
 type Props = { project: Project; selected: InspectorKey; onSelect: (key: InspectorKey) => void };
 
-const itemClass = (selected: boolean) =>
-  `flex h-11 md:h-8 cursor-pointer items-center rounded-md font-mono text-[13px] outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+// Focus-visible ring belongs on the focusable element itself (the `li[role=treeitem]`), never
+// on a purely visual inner wrapper the browser never actually focuses.
+const focusRing = 'outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-md';
+
+const itemVisual = (selected: boolean) =>
+  `flex h-11 md:h-8 cursor-pointer items-center rounded-md font-mono text-[13px] ${
     selected ? 'bg-primary/15 text-fg' : 'text-muted hover:text-fg'
   }`;
 
@@ -14,6 +18,17 @@ export function ComponentTree({ project, selected, onSelect }: Props) {
   const [state, setState] = useState<TreeState>({ expanded: true, focus: INSPECTOR_KEYS.indexOf(selected) });
   const items = useRef<(HTMLElement | null)[]>([]);
   const userMoved = useRef(false);
+  const rootLabelId = useId();
+
+  // Selection changed from outside (e.g. PropsPane's ←/→ buttons): move the roving tabIndex to
+  // match during render (React's "adjust state when a prop changes" pattern), without stealing
+  // DOM focus — the focus-moving effect below only runs off `userMoved`, which this doesn't set.
+  const [prevSelected, setPrevSelected] = useState(selected);
+  if (selected !== prevSelected) {
+    setPrevSelected(selected);
+    const index = INSPECTOR_KEYS.indexOf(selected);
+    if (index !== state.focus) setState((s) => ({ ...s, focus: index }));
+  }
 
   useEffect(() => {
     if (userMoved.current) items.current[state.focus]?.focus();
@@ -48,17 +63,21 @@ export function ComponentTree({ project, selected, onSelect }: Props) {
         aria-level={1}
         aria-expanded={state.expanded}
         aria-selected={selected === 'root'}
+        aria-labelledby={rootLabelId}
         tabIndex={state.focus === 0 ? 0 : -1}
         ref={(el) => {
           items.current[0] = el;
         }}
         onClick={() => choose(0)}
+        className={focusRing}
       >
-        <span className={`${itemClass(selected === 'root')} pl-3`}>
+        <span className={`${itemVisual(selected === 'root')} pl-3`}>
           <span aria-hidden className="mr-1.5 text-muted">
             {state.expanded ? '▾' : '▸'}
           </span>
-          <span className="tok-tag">&lt;{project.name}&gt;</span>
+          <span id={rootLabelId} className="tok-tag">
+            &lt;{project.name}&gt;
+          </span>
         </span>
         {state.expanded && (
           <ul role="group" className="mt-0.5 flex flex-col gap-0.5">
@@ -76,7 +95,7 @@ export function ComponentTree({ project, selected, onSelect }: Props) {
                   e.stopPropagation();
                   choose(i + 1);
                 }}
-                className={`${itemClass(selected === key)} pl-8`}
+                className={`${focusRing} ${itemVisual(selected === key)} pl-8`}
               >
                 <span className="tok-tag">&lt;{nodeLabel(key)} /&gt;</span>
               </li>

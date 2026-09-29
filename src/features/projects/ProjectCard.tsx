@@ -36,7 +36,7 @@ export function ProjectCard({ project, onInspect }: Props) {
               rel="noreferrer"
               className="flex h-11 items-center rounded-lg px-3 text-sm text-muted transition-colors hover:text-fg md:h-10"
             >
-              Visit ↗ <span className="sr-only">{project.title} (opens in a new tab)</span>
+              Visit <span aria-hidden>↗</span> <span className="sr-only">{project.title} (opens in a new tab)</span>
             </a>
           )}
           <button

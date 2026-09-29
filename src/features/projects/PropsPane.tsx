@@ -37,8 +37,14 @@ export function PropsPane({ project, selected, onSelect }: Props) {
             <span className="tok-punct">: </span>
             <dd className="inline">
               {project.links.map((link) => (
-                <a key={link.href} href={link.href} target="_blank" rel="noreferrer" className="underline-offset-4 hover:underline">
-                  {link.label} ↗<span className="sr-only"> (opens in a new tab)</span>
+                <a
+                  key={link.href}
+                  href={link.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex min-h-11 items-center underline-offset-4 hover:underline md:min-h-0"
+                >
+                  {link.label} <span aria-hidden>↗</span> <span className="sr-only">(opens in a new tab)</span>
                 </a>
               ))}
             </dd>

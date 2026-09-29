@@ -11,7 +11,10 @@ describe('<PropsPane />', () => {
     render(<PropsPane project={project} selected="root" onSelect={() => {}} />);
     expect(screen.getByText('stack')).toBeInTheDocument();
     expect(screen.getByText(/Select a node/)).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /Open the Card Creator/ })).toHaveAttribute('href', project.links[0]!.href);
+    const link = screen.getByRole('link', { name: /Open the Card Creator/ });
+    expect(link).toHaveAttribute('href', project.links[0]!.href);
+    expect(link).toHaveAccessibleName(`${project.links[0]!.label} (opens in a new tab)`);
+    expect(link).toHaveClass('min-h-11');
   });
 
   it('shows the selected node state and steps to neighbours', async () => {
