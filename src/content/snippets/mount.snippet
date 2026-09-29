@@ -11,7 +11,8 @@ export function Hero() {
   return (
     <div data-hero data-mounted={done ? '' : undefined}>
       <TagTokens text={output} />
-      <h1 id="mount-title" data-hero-mount>{profile.greeting}</h1>
+      <h1 id="mount-title">{profile.greeting}</h1>
+      <p data-hero-mount>{profile.subline.lead}</p>
       <a href="#props">Inspect my work</a>
     </div>
   );
