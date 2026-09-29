@@ -17,25 +17,28 @@ export function PropsPane({ project, selected, onSelect }: Props) {
         <dl className="font-mono text-[13px] leading-6">
           <div>
             <dt className="tok-prop inline">stack</dt>
-            <span className="tok-punct">: </span>
-            <dd className="tok-str inline">[{project.stack.map((s) => `"${s}"`).join(', ')}]</dd>
+            <dd className="tok-str inline">
+              <span className="tok-punct">: </span>[{project.stack.map((s) => `"${s}"`).join(', ')}]
+            </dd>
           </div>
           {project.team && (
             <div>
               <dt className="tok-prop inline">team</dt>
-              <span className="tok-punct">: </span>
-              <dd className="tok-str inline">&quot;{project.team}&quot;</dd>
+              <dd className="tok-str inline">
+                <span className="tok-punct">: </span>&quot;{project.team}&quot;
+              </dd>
             </div>
           )}
           <div>
             <dt className="tok-prop inline">year</dt>
-            <span className="tok-punct">: </span>
-            <dd className="tok-str inline">&quot;{project.year}&quot;</dd>
+            <dd className="tok-str inline">
+              <span className="tok-punct">: </span>&quot;{project.year}&quot;
+            </dd>
           </div>
           <div>
             <dt className="tok-prop inline">links</dt>
-            <span className="tok-punct">: </span>
             <dd className="inline">
+              <span className="tok-punct">: </span>
               {project.links.map((link) => (
                 <a
                   key={link.href}

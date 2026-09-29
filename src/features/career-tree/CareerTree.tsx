@@ -23,7 +23,7 @@ export function CareerTree() {
 
   return (
     <div ref={ref} className="career-pin">
-      <div className="career-sticky grid gap-12 py-24 lg:grid-cols-[4fr_8fr] lg:gap-16">
+      <div className="career-sticky grid gap-3 py-24 lg:grid-cols-[4fr_8fr] lg:gap-16">
         <div className="flex flex-col justify-between gap-8">
           <SectionHeader step="tree" title={SECTION_HEADERS.tree.title.replace('{years}', String(years))} />
           <div aria-hidden className="hidden flex-col gap-2.5 font-mono text-xs text-muted lg:flex">
@@ -46,7 +46,7 @@ export function CareerTree() {
             <span className="tok-punct">{'}'}</span>
             <span className="tok-tag">&gt;</span>
           </p>
-          <ol className="ml-3 flex flex-col gap-3.5 border-l border-primary">
+          <ol className="ml-3 flex flex-col gap-1 border-l border-primary lg:gap-3.5">
             {recent.map((role, i) => (
               <TreeNode
                 key={role.component}

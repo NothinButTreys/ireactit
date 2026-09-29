@@ -16,7 +16,8 @@
     "test:watch": "vitest",
     "coverage": "vitest run --coverage",
     "e2e": "playwright test",
-    "e2e:ditl": "playwright test tests/ditl"
+    "e2e:ditl": "playwright test tests/ditl",
+    "check:bundle": "tsx scripts/check-bundle.ts"
   },
   "dependencies": {
     "@fontsource-variable/jetbrains-mono": "^5.3.0",

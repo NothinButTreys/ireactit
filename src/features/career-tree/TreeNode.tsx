@@ -12,7 +12,7 @@ export function TreeNode({ role, mounted, expanded, newest }: Props) {
         className={`absolute top-[22px] left-0 h-px w-8 origin-left transition-transform duration-500 ${mounted ? 'scale-x-100 bg-primary' : 'scale-x-0 bg-border'}`}
       />
       <article
-        className={`rounded-xl border bg-card px-5 py-3 transition-colors duration-500 ${newest ? 'border-primary' : mounted ? 'border-border' : 'border-border/40'} ${mounted ? '' : 'bg-card/40'}`}
+        className={`rounded-xl border bg-card px-5 py-2 transition-colors duration-500 lg:py-3 ${newest ? 'border-primary' : mounted ? 'border-border' : 'border-border/40'} ${mounted ? '' : 'bg-card/40'}`}
       >
         <h3 className="font-mono text-[13px] leading-relaxed font-normal md:text-[15px]">
           <span className="tok-tag">&lt;{role.component}</span> <span className="tok-prop">role</span>
@@ -26,7 +26,7 @@ export function TreeNode({ role, mounted, expanded, newest }: Props) {
         <p className="font-mono text-xs text-muted">{formatRange(role.start, role.end)}</p>
         {showChildren && (
           <>
-            <ul className="mount-in mt-3 mb-2 ml-6 flex flex-col gap-2 text-[15px] md:text-base">
+            <ul className="mount-in mt-1.5 mb-1 ml-6 flex flex-col gap-1 text-[15px] leading-snug md:text-base lg:mt-3 lg:mb-2 lg:gap-2 lg:leading-normal">
               {role.highlights.map((highlight) => (
                 <li key={highlight} className="flex gap-3">
                   <span aria-hidden className="font-mono text-success">
