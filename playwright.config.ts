@@ -11,6 +11,9 @@ const bypass = process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
 // tests/visual compares against Linux baselines and runs only inside the Playwright image
 // (scripts/visual-run.sh, scripts/visual-update.sh), which sets PW_VISUAL=1.
 const visual = !!process.env.PW_VISUAL;
+// Traces record request headers verbatim, including the Vercel bypass secret and the x-ditl-token, and deploy-check
+// uploads failed reports from this public repo. So never trace against a deployment; CI on localhost (dummy token) keeps them.
+const remote = !!(process.env.BASE_URL || bypass);
 
 export default defineConfig({
   testDir: './tests',
@@ -23,7 +26,7 @@ export default defineConfig({
   reporter: process.env.CI ? [['github'], ['html', { open: 'never' }]] : 'list',
   use: {
     baseURL,
-    trace: 'retain-on-failure',
+    trace: remote ? 'off' : 'retain-on-failure',
     extraHTTPHeaders: {
       'x-vercel-skip-toolbar': '1',
       ...(bypass ? { 'x-vercel-protection-bypass': bypass, 'x-vercel-set-bypass-cookie': 'true' } : {}),

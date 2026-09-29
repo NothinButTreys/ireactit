@@ -38,8 +38,19 @@ jobs:
       - name: Visual regression against deployment (Playwright container)
         if: github.event.deployment.environment != 'Production'
         run: bash scripts/visual-run.sh
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      # Belt and braces: playwright.config.ts turns traces off against deployments because they record the bypass
+      # secret and DITL token headers verbatim. Strip any trace zips anyway before a report leaves this public repo;
+      # HTML error text and screenshots stay (screenshots can't show headers). sudo: the visual container writes as root.
+      - name: Strip traces from reports
+        id: strip-traces
         if: failure()
+        run: |
+          for d in playwright-report playwright-report-visual; do
+            if [ -d "$d" ]; then sudo find "$d" -name '*.zip' -delete; fi
+          done
+          if sudo find playwright-report* -name '*.zip' 2>/dev/null | grep -q .; then echo "trace zips remain" >&2; exit 1; fi
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: failure() && steps.strip-traces.outcome == 'success'
         with:
           name: playwright-report-deploy
           path: |
