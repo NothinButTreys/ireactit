@@ -12,6 +12,10 @@
     <meta property="og:description" content="Principal Engineer. I build React that feels effortless." />
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <!-- Preload the latin display and mono faces so text is in its final font before the first layout
+         (and before a #hash deep link scrolls), instead of swapping and shifting what's above the target. -->
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="/node_modules/@fontsource-variable/space-grotesk/files/space-grotesk-latin-wght-normal.woff2" />
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="/node_modules/@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2" />
     <script>
       document.documentElement.classList.add('js');
       setTimeout(function () {

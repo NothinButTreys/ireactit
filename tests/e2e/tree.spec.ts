@@ -3,7 +3,10 @@ import { expect, test } from '../fixtures';
 
 const NAV = 56;
 
-/** Cumulative layout shift since navigation start (buffered), ignoring shifts right after input. */
+/**
+ * Cumulative layout shift since navigation start (buffered). Every shift counts: nothing is typed or tapped
+ * during these loads, and Chromium's mobile emulation flags load-time shifts as hadRecentInput.
+ */
 async function loadCls(page: Page): Promise<number> {
   await expect(page.locator('html.hydrated')).toBeAttached();
   await page.waitForTimeout(1500);
@@ -12,9 +15,7 @@ async function loadCls(page: Page): Promise<number> {
       new Promise<number>((resolve) => {
         let total = 0;
         const observer = new PerformanceObserver((list) => {
-          for (const entry of list.getEntries() as (PerformanceEntry & { value: number; hadRecentInput: boolean })[]) {
-            if (!entry.hadRecentInput) total += entry.value;
-          }
+          for (const entry of list.getEntries() as (PerformanceEntry & { value: number })[]) total += entry.value;
         });
         observer.observe({ type: 'layout-shift', buffered: true });
         setTimeout(() => {
