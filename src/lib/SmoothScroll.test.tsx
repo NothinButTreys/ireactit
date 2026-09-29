@@ -13,7 +13,7 @@ const { LenisMock, destroy } = vi.hoisted(() => {
 });
 vi.mock('lenis', () => ({ default: LenisMock }));
 
-type LenisOptions = { autoRaf: boolean; anchors: { offset: number }; prevent: (node: HTMLElement) => boolean };
+type LenisOptions = { autoRaf: boolean; anchors: boolean; prevent: (node: HTMLElement) => boolean };
 
 describe('<SmoothScroll />', () => {
   beforeEach(() => {
@@ -21,12 +21,13 @@ describe('<SmoothScroll />', () => {
     destroy.mockClear();
   });
 
-  it('starts Lenis with auto RAF and nav-offset anchors, and destroys it on unmount', () => {
+  it('starts Lenis with auto RAF and no extra anchor offset (sections carry their own scroll-mt), and destroys it on unmount', () => {
     const { unmount } = render(<SmoothScroll />);
     expect(LenisMock).toHaveBeenCalledOnce();
     const options = (LenisMock.mock.calls[0] as unknown as [LenisOptions])[0];
     expect(options.autoRaf).toBe(true);
-    expect(options.anchors).toEqual({ offset: -NAV_OFFSET });
+    expect(options.anchors).toBe(true);
+    expect(NAV_OFFSET).toBe(56);
     unmount();
     expect(destroy).toHaveBeenCalledOnce();
   });
