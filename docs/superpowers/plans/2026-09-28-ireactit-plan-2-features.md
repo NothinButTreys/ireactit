@@ -1167,6 +1167,9 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 
 ---
 
+
+> **Note (added after Plan 2 Task 2's fix round):** `SectionHeader` now takes `step` (and an optional `title` override) and reads `num`/`title`/`sub` from `SECTION_HEADERS` in `src/content/sections.ts`. Every `SectionHeader` in the tasks below uses that API. `src/App.tsx`'s `<main>` uses `pb-[30vh] md:pb-0` so the last section can reach the active band on mobile. Task 7 must re-check whether that run-out is still needed once the contact section has real content, and set it back to `pb-24 md:pb-0` if the shell e2e passes without it.
+
 ### Task 3: Hero, the "mount" step
 
 **Files:**
@@ -2140,12 +2143,7 @@ import { TreyEditor } from './TreyEditor';
 export function WriteSection() {
   return (
     <div className="flex flex-col gap-10">
-      <SectionHeader
-        num="02"
-        step="write"
-        title="Written in TypeScript. Rendered live."
-        sub="Change a prop and watch the component re-render — the counter in the nav keeps score."
-      />
+      <SectionHeader step="write" />
       <Reveal delay={120}>
         <TreyEditor />
       </Reveal>
@@ -2571,6 +2569,7 @@ import { useRef } from 'react';
 import { experience } from '@/content/experience';
 import { useHydrated } from '@/lib/useHydrated';
 import { usePrefersReducedMotion } from '@/lib/usePrefersReducedMotion';
+import { SECTION_HEADERS } from '@/content/sections';
 import { SectionHeader } from '@/ui/SectionHeader';
 import { careerYears } from './careerProgress';
 import { EarlyCareerNode } from './EarlyCareerNode';
@@ -2593,12 +2592,7 @@ export function CareerTree() {
     <div ref={ref} className="career-pin">
       <div className="career-sticky grid gap-12 py-24 lg:grid-cols-[4fr_8fr] lg:gap-16">
         <div className="flex flex-col justify-between gap-8">
-          <SectionHeader
-            num="03"
-            step="tree"
-            title={`${years} years, one component tree.`}
-            sub="Every role is a component. Scroll and the tree mounts itself, node by node."
-          />
+          <SectionHeader step="tree" title={SECTION_HEADERS.tree.title.replace('{years}', String(years))} />
           <div aria-hidden className="hidden flex-col gap-2.5 font-mono text-xs text-muted lg:flex">
             <span>
               {scrollDriven ? 'pinned · ' : ''}mounted {mounted} / {TOTAL}
@@ -3502,12 +3496,7 @@ export function Projects() {
   return (
     <div className="flex flex-col gap-10">
       <div className="flex flex-wrap items-end justify-between gap-4">
-        <SectionHeader
-          num="04"
-          step="props"
-          title="Things I've shipped."
-          sub="Each project is a component. Inspect one to see its tree, its props and the decisions behind it."
-        />
+        <SectionHeader step="props" />
         <p aria-hidden className="font-mono text-xs text-muted">
           {projects.length} components · ⌘ Inspect
         </p>
@@ -4160,12 +4149,7 @@ export function CommitSection() {
   return (
     <div className="grid gap-12 lg:grid-cols-[5fr_7fr] lg:gap-16">
       <div className="flex flex-col gap-8">
-        <SectionHeader
-          num="05"
-          step="commit"
-          title="Let's build something."
-          sub="Commit a message straight to my inbox. Or skip the terminal and find me below."
-        />
+        <SectionHeader step="commit" />
         <ul className="flex flex-wrap gap-2.5">
           {LINKS.map(({ label, href }) => (
             <li key={label}>
