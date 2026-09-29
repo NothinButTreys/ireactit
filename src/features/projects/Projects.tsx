@@ -10,8 +10,15 @@ import { ProjectCard } from './ProjectCard';
 
 type Open = { project: Project; opener: HTMLElement };
 
+const InspectorError = () => (
+  <p role="alert" className="fixed inset-x-4 bottom-4 z-50 rounded-lg border border-danger/40 bg-card px-4 py-3 text-sm text-danger shadow-lg">
+    Couldn&apos;t load the inspector — try again.
+  </p>
+);
+
 export function Projects() {
   const [open, setOpen] = useState<Open | null>(null);
+  const [openCount, setOpenCount] = useState(0);
   const bump = useBump();
 
   return (
@@ -29,13 +36,16 @@ export function Projects() {
               project={project}
               onInspect={(opener) => {
                 setOpen({ project, opener });
+                setOpenCount((n) => n + 1);
                 bump();
               }}
             />
           </Reveal>
         ))}
       </div>
-      <ErrorBoundary fallback={null}>
+      {/* Keyed by the open counter so a failed chunk load doesn't leave the boundary tripped forever —
+          the next "Inspect" click remounts a fresh boundary and gets a fresh chance to load the chunk. */}
+      <ErrorBoundary key={openCount} fallback={<InspectorError />}>
         <Suspense fallback={null}>
           {open && <InspectorPanel project={open.project} opener={open.opener} onClose={() => setOpen(null)} />}
         </Suspense>

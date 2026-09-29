@@ -12,7 +12,7 @@ vi.mock('./lazyInspector', () => ({
 }));
 
 describe('<Projects /> lazy chunk failure', () => {
-  it('keeps the page usable when the Inspector chunk fails to load', async () => {
+  it('shows a visible fallback and keeps the page usable when the Inspector chunk fails to load', async () => {
     const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
     const { Projects } = await import('./Projects');
     render(
@@ -25,15 +25,24 @@ describe('<Projects /> lazy chunk failure', () => {
       expect(screen.getByRole('heading', { level: 3, name: p.title })).toBeInTheDocument();
     }
 
-    await userEvent.click(screen.getByRole('button', { name: `⌘ Inspect ${projects[0]!.title}` }));
+    const openInspector = () => userEvent.click(screen.getByRole('button', { name: `⌘ Inspect ${projects[0]!.title}` }));
+    await openInspector();
 
     // The lazy chunk rejects asynchronously; wait for it to surface, then confirm the
-    // ErrorBoundary swallowed it (fallback: null) instead of taking down the page.
+    // ErrorBoundary caught it and shows a visible message instead of taking down the page.
     await waitFor(() => expect(spy).toHaveBeenCalled());
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    expect(screen.getByRole('alert')).toHaveTextContent("Couldn't load the inspector — try again.");
     for (const p of projects) {
       expect(screen.getByRole('heading', { level: 3, name: p.title })).toBeInTheDocument();
     }
+
+    // Reopening mounts a fresh ErrorBoundary (keyed by the open counter) rather than staying tripped:
+    // componentDidCatch fires again instead of the fallback silently persisting from the first mount.
+    const callsAfterFirstOpen = spy.mock.calls.length;
+    await openInspector();
+    await waitFor(() => expect(spy.mock.calls.length).toBeGreaterThan(callsAfterFirstOpen));
+    expect(screen.getByRole('alert')).toHaveTextContent("Couldn't load the inspector — try again.");
 
     spy.mockRestore();
   });
