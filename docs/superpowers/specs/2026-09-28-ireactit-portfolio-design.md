@@ -26,7 +26,7 @@ A blog, a CMS, a skills grid, testimonials, i18n, analytics beyond Vercel's buil
 
 - **Wordmark:** `<IReactIt/>`
 - **Hero copy:** "Hi, I'm Trey." Subline: "I build React that feels effortless." Role: Principal Engineer.
-- **External links:** GitHub (NothinButTreys), LinkedIn (`/in/thomasmcbrideiii`), Resume (`https://docs.google.com/document/d/1aCimN1jwt8TFKdIiOJHGyOtdTOPnB-f-KglyM68beMo/edit`), PixelTable (pixeltable.net).
+- **External links:** GitHub (NothinButTreys), LinkedIn (`/in/thomasmcbrideiii`), Resume (LinkedIn experience page, `/in/thomasmcbrideiii/details/experience/`; changed 2026-09-29, no downloadable doc for now), PixelTable (pixeltable.net).
 
 ## 3. Page flow
 
