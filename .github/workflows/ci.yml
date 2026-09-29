@@ -30,6 +30,8 @@ jobs:
       - run: pnpm check:csp
       - run: pnpm exec playwright install --with-deps chromium webkit
       - run: pnpm e2e
+      # Lighthouse budgets against the prerendered build, on the runner's system Chrome.
+      - run: pnpm lhci
       # Visual baselines are rendered in the Playwright image, so they are compared there too.
       - name: Visual regression (Playwright container)
         run: bash scripts/visual-run.sh

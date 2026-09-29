@@ -20,7 +20,8 @@
     "visual:update": "bash scripts/visual-update.sh",
     "check:bundle": "tsx scripts/check-bundle.ts",
     "check:csp": "tsx scripts/check-csp.ts",
-    "og": "tsx scripts/render-og.ts"
+    "og": "tsx scripts/render-og.ts",
+    "lhci": "lhci autorun"
   },
   "dependencies": {
     "@fontsource-variable/jetbrains-mono": "^5.3.0",
@@ -35,6 +36,7 @@
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
     "@eslint/js": "^10.0.1",
+    "@lhci/cli": "^0.15.1",
     "@playwright/test": "^1.63.0",
     "@tailwindcss/vite": "^4.3.3",
     "@testing-library/jest-dom": "^7.0.1",

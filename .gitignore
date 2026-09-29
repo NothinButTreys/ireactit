@@ -13,3 +13,4 @@ playwright/.cache
 .superpowers
 .pw-out/
 tests/zz-probe/
+.lighthouseci
