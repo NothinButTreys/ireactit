@@ -7,7 +7,6 @@
   "redirects": [
     { "source": "/login", "destination": "/", "permanent": false },
     { "source": "/register", "destination": "/", "permanent": false },
-    { "source": "/project", "destination": "/", "permanent": false },
     { "source": "/project/:path*", "destination": "/", "permanent": false }
   ],
   "headers": [

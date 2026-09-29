@@ -44,6 +44,10 @@ describe('validateCommit', () => {
     expect(Object.keys(errors ?? {}).sort()).toEqual(['email', 'message', 'name']);
     expect(errors?.email).toBe('That email looks off');
   });
+
+  it('leaves a hidden-field (honeypot) failure to the server instead of returning an empty, unshowable error set', () => {
+    expect(validateCommit({ ...good, hp_url: 'x'.repeat(201) })).toBeNull();
+  });
 });
 
 describe('firstInvalidField', () => {
@@ -65,6 +69,17 @@ describe('postCommit', () => {
     expect(url).toBe('/api/contact');
     expect(init?.method).toBe('POST');
     expect(JSON.parse(String(init?.body))).toEqual(good);
+  });
+
+  it('reports a 400 with no visible field errors as a rejected push, not a silent idle', async () => {
+    expect(await postCommit(good, respond(400, { ok: false, error: 'invalid', fieldErrors: {} }))).toEqual({
+      type: 'rejected',
+      reason: 'send_failed',
+    });
+    expect(await postCommit(good, respond(400, { fieldErrors: { hp_url: ['Too long'] } }))).toEqual({
+      type: 'rejected',
+      reason: 'send_failed',
+    });
   });
 
   it('maps server field errors, rate limits, failures and network errors', async () => {

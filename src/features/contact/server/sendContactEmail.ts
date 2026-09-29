@@ -9,8 +9,9 @@ export async function sendContactEmail(input: ContactInput): Promise<void> {
   const resend = new Resend(apiKey);
   const safeName = input.name.replace(/[\r\n]+/g, ' ');
   const from =
-    process.env.CONTACT_FROM_EMAIL ??
-    (process.env.RESEND_EMAIL_DOMAIN ? `IReactIt <contact@${process.env.RESEND_EMAIL_DOMAIN}>` : undefined) ??
+    // `||`, not `??`: a variable saved empty in the dashboard must fall through too.
+    process.env.CONTACT_FROM_EMAIL ||
+    (process.env.RESEND_EMAIL_DOMAIN ? `IReactIt <contact@${process.env.RESEND_EMAIL_DOMAIN}>` : '') ||
     'IReactIt <onboarding@resend.dev>';
   const { error } = await resend.emails.send({
     from,

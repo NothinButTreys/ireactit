@@ -29,4 +29,15 @@ describe('createRateLimiter', () => {
     allow('a');
     expect(store.has('a')).toBe(false);
   });
+
+  it('sweeps keys whose window has expired once the store grows large, even if those IPs never return', () => {
+    const store = new Map<string, number[]>();
+    let t = 0;
+    const allow = createRateLimiter({ limit: 5, windowMs: 1000, now: () => t, store });
+    for (let i = 0; i < 1001; i++) allow(`ip-${i}`);
+    expect(store.size).toBe(1001);
+    t = 1000;
+    allow('fresh');
+    expect([...store.keys()]).toEqual(['fresh']);
+  });
 });

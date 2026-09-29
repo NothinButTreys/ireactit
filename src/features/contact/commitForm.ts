@@ -58,7 +58,10 @@ function firstErrors(fieldErrors: Record<string, string[] | undefined>): FieldEr
 
 export function validateCommit(fields: Fields): FieldErrors | null {
   const parsed = contactSchema.safeParse(fields);
-  return parsed.success ? null : firstErrors(z.flattenError(parsed.error).fieldErrors);
+  if (parsed.success) return null;
+  const errors = firstErrors(z.flattenError(parsed.error).fieldErrors);
+  // Only visible fields can be shown and focused; a hidden-field (honeypot) failure is left for the server to judge.
+  return Object.keys(errors).length > 0 ? errors : null;
 }
 
 /** The first invalid field, in name → email → message order (the order fields appear in the form). */
@@ -86,7 +89,9 @@ export async function postCommit(fields: Fields, fetchImpl: typeof fetch = fetch
       typeof body === 'object' && body !== null && 'fieldErrors' in body
         ? (body.fieldErrors as Record<string, string[] | undefined>)
         : {};
-    return { type: 'invalid', errors: firstErrors(fieldErrors) };
+    const errors = firstErrors(fieldErrors);
+    // A 400 with nothing to show on a visible field (malformed body, honeypot) must still tell the visitor it failed.
+    return Object.keys(errors).length > 0 ? { type: 'invalid', errors } : { type: 'rejected', reason: 'send_failed' };
   }
   return { type: 'rejected', reason: res.status === 429 ? 'rate_limited' : 'send_failed' };
 }

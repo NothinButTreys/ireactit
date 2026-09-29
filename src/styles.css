@@ -94,7 +94,8 @@ body {
     filter 500ms var(--ease);
   transition-delay: var(--reveal-delay, 0ms);
 }
-.js [data-no-js-only] {
+.js [data-no-js-only],
+.hydrated [data-no-js-only] {
   display: none;
 }
 

@@ -166,8 +166,8 @@ export function CommitTerminal() {
             git push
           </button>
         </div>
-        {/* Shown only while html lacks `.js`: no JavaScript, or the bundle failed and the 3s failsafe dropped `.js`
-            (a <noscript> would miss that second case). */}
+        {/* Shown only while html has neither `.js` nor `.hydrated`: no JavaScript, or the bundle failed and the 3s
+            failsafe dropped `.js` (a <noscript> would miss that case). A bundle that hydrates late adds `.hydrated`. */}
         <p data-no-js-only="" className="pt-3 font-mono text-xs text-muted">
           The terminal needs JavaScript. Reach me on{' '}
           <a href={profile.links.linkedin} target="_blank" rel="noreferrer" className="text-primary underline-offset-4 hover:underline">

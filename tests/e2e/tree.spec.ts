@@ -149,6 +149,8 @@ test.describe('app bundle arrives after the 3s failsafe', () => {
     await page.goto('/');
     await expect(page.locator('html.hydrated')).toBeAttached({ timeout: 10_000 });
     expect(await page.evaluate(() => document.documentElement.classList.contains('js'))).toBe(false);
+    // The terminal works now, so its "needs JavaScript" fallback must not show beside it.
+    await expect(page.locator('#commit [data-no-js-only]')).toBeHidden();
     const tree = page.locator('#tree');
     await tree.scrollIntoViewIfNeeded();
     await expect(tree.locator('.career-pin')).not.toHaveAttribute('data-pinned');
