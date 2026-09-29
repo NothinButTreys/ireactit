@@ -220,22 +220,19 @@ body {
   }
 }
 
-/* Career tree: pinned, scroll-driven when JS runs and motion is allowed. */
-.js .career-pin {
-  height: 300svh;
-}
-.js .career-sticky {
-  position: sticky;
-  top: 3.5rem;
-  min-height: calc(100svh - 3.5rem);
-}
-@media (prefers-reduced-motion: reduce) {
+/* Career tree: pinned and scroll-driven only where its fixed-geometry stage fits under the nav — JS running,
+   motion allowed, lg and tall (mirrors PINNABLE_QUERY in usePinnable.ts). Everywhere else it's the static
+   tree. Decided here too, so the pin's height is right before hydration (no layout shift when JS takes over). */
+@media (min-width: 1024px) and (min-height: 760px) and (prefers-reduced-motion: no-preference),
+  (min-width: 1200px) and (min-height: 700px) and (prefers-reduced-motion: no-preference) {
   .js .career-pin {
-    height: auto;
+    height: 300svh;
   }
   .js .career-sticky {
-    position: static;
-    min-height: 0;
+    position: sticky;
+    top: 3.5rem;
+    height: calc(100svh - 3.5rem);
+    overflow: hidden;
   }
 }
 

@@ -2,10 +2,14 @@ import { describe, expect, it } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { CareerTree } from './CareerTree';
+import { PINNABLE_QUERY } from './usePinnable';
+import { experience } from '@/content/experience';
 import { REDUCED_MOTION_QUERY } from '@/lib/usePrefersReducedMotion';
 import { mockMatchMedia } from '@/test/matchMedia';
 
+const recent = experience.filter((role) => role.era === 'recent');
 const nodes = () => screen.getAllByRole('listitem').filter((li) => li.hasAttribute('data-state'));
+const detailPanes = (container: HTMLElement) => container.querySelectorAll('[data-career-detail]');
 
 describe('<CareerTree />', () => {
   it('headlines the career length and opens <Career>', () => {
@@ -14,20 +18,64 @@ describe('<CareerTree />', () => {
     expect(screen.getByText(/<Career/)).toBeInTheDocument();
   });
 
-  it('when scroll-driven, mounts only the first role and expands only the newest one', () => {
-    render(<CareerTree />);
-    const [first, second] = nodes();
-    expect(first).toHaveAttribute('data-state', 'mounted');
-    expect(second).toHaveAttribute('data-state', 'pending');
-    expect(within(first!).getByText(/Daggerheart Card Creator/)).toBeVisible();
-    expect(within(second!).queryByRole('list')).not.toBeInTheDocument();
+  describe('pinned (large, tall viewport with motion allowed)', () => {
+    it('mounts only the first role and shows its highlights in the detail pane', () => {
+      mockMatchMedia([PINNABLE_QUERY]);
+      const { container } = render(<CareerTree />);
+      const [first, second] = nodes();
+      expect(first).toHaveAttribute('data-state', 'mounted');
+      expect(second).toHaveAttribute('data-state', 'pending');
+      const panes = detailPanes(container);
+      expect(panes).toHaveLength(1);
+      const pane = panes[0] as HTMLElement;
+      expect(pane).toHaveAttribute('aria-hidden', 'true');
+      expect(pane).toHaveAttribute('inert');
+      for (const highlight of recent[0]!.highlights) expect(pane).toHaveTextContent(highlight);
+      expect(pane).not.toHaveTextContent(recent[1]!.highlights[0]!);
+      expect(screen.getByText(/mounting 1 \/ 6/)).toBeInTheDocument();
+    });
+
+    it("keeps every role's highlights in the DOM, visually hidden inside its node", () => {
+      mockMatchMedia([PINNABLE_QUERY]);
+      render(<CareerTree />);
+      const roleNodes = nodes().slice(0, recent.length);
+      recent.forEach((role, i) => {
+        const node = roleNodes[i]!;
+        const list = within(node).getByRole('list');
+        expect(list.closest('.sr-only')).not.toBeNull();
+        for (const highlight of role.highlights) expect(within(list).getByText(highlight)).toBeInTheDocument();
+      });
+    });
+
+    it('lets the node list scroll inside the stage instead of growing it', () => {
+      mockMatchMedia([PINNABLE_QUERY]);
+      const { container } = render(<CareerTree />);
+      const list = container.querySelector('ol[data-lenis-prevent]');
+      expect(list).not.toBeNull();
+      expect(list).toHaveClass('overflow-y-auto');
+    });
   });
 
-  it('under reduced motion, mounts and expands every role', () => {
-    mockMatchMedia([REDUCED_MOTION_QUERY]);
-    render(<CareerTree />);
-    for (const node of nodes()) expect(node).toHaveAttribute('data-state', 'mounted');
-    expect(screen.getByText(/Owned technical breakdowns/)).toBeInTheDocument();
+  describe('static (phones, tablets, short laptops, reduced motion, prerender)', () => {
+    it('mounts every role and shows its highlights inline with no detail pane', () => {
+      const { container } = render(<CareerTree />);
+      for (const node of nodes()) expect(node).toHaveAttribute('data-state', 'mounted');
+      expect(detailPanes(container)).toHaveLength(0);
+      for (const role of recent) {
+        for (const highlight of role.highlights) {
+          const item = screen.getByText(highlight);
+          expect(item.closest('.sr-only')).toBeNull();
+        }
+      }
+    });
+
+    it('is static under reduced motion even on a large, tall viewport', () => {
+      mockMatchMedia([PINNABLE_QUERY, REDUCED_MOTION_QUERY]);
+      const { container } = render(<CareerTree />);
+      for (const node of nodes()) expect(node).toHaveAttribute('data-state', 'mounted');
+      expect(detailPanes(container)).toHaveLength(0);
+      expect(screen.getByText(/Owned technical breakdowns/).closest('.sr-only')).toBeNull();
+    });
   });
 
   it('keeps the six early roles in a collapsible <EarlyCareer> node', async () => {
