@@ -7,11 +7,12 @@ export async function sendContactEmail(input: ContactInput): Promise<void> {
   if (!apiKey || !to) throw new Error('Contact email is not configured');
 
   const resend = new Resend(apiKey);
+  const safeName = input.name.replace(/[\r\n]+/g, ' ');
   const { error } = await resend.emails.send({
     from: process.env.CONTACT_FROM_EMAIL ?? 'IReactIt <onboarding@resend.dev>',
     to,
     replyTo: input.email,
-    subject: `ireactit.com: commit from ${input.name}`,
+    subject: `ireactit.com: commit from ${safeName}`,
     text: `${input.message}\n\n— ${input.name} <${input.email}>`,
   });
   if (error) throw new Error(error.message);

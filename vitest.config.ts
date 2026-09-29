@@ -12,9 +12,7 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       include: ['src/lib/**', 'src/content/**', 'src/features/**/use*.ts', 'src/features/**/server/**'],
-      // sendContactEmail.ts is thin Resend wiring with no unit test in Task 5's brief; it is
-      // exercised by the Task 7 e2e/DITL suite instead.
-      exclude: ['**/*.test.*', 'src/features/contact/server/sendContactEmail.ts'],
+      exclude: ['**/*.test.*'],
       thresholds: { lines: 90 },
     },
   },
