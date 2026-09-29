@@ -58,7 +58,7 @@ export function Hero() {
       <div data-hero-mount="" style={delay(360)}>
         <RenderLog />
       </div>
-      <p aria-hidden className="col-span-full hidden justify-between font-mono text-xs text-muted lg:flex">
+      <p aria-hidden data-hero-end="" className="col-span-full hidden justify-between font-mono text-xs text-muted lg:flex">
         <span>scroll to render ↓</span>
         <span>ireactit.com</span>
       </p>

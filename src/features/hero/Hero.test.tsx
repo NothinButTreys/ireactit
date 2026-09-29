@@ -36,6 +36,13 @@ describe('<Hero />', () => {
     expect(screen.getByRole('link', { name: 'git commit -m "hello"' })).toHaveAttribute('href', '#commit');
   });
 
+  it('marks its last element data-hero-end: styles.css keeps #mount invisible until that is parsed', () => {
+    const { container } = renderHero();
+    const all = container.querySelectorAll('[data-hero] *');
+    expect(all[all.length - 1]!.closest('[data-hero-end]')).not.toBeNull();
+    expect(container.querySelectorAll('[data-hero-end]')).toHaveLength(1);
+  });
+
   it('types the tag, then mounts exactly once and bumps the render counter', () => {
     vi.useFakeTimers();
     const { container } = renderHero();

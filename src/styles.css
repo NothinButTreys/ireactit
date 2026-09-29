@@ -101,6 +101,15 @@ body {
   filter: blur(4px);
 }
 
+/* A slow phone can paint the prerendered HTML while the parser is still inside the hero. The hero is vertically
+   centred, so each chunk parsed after that paint would grow and re-centre it (layout shift). Keep the whole
+   section invisible (hiding only [data-hero] still counts its centred wrapper's shift) until the hero's last
+   element ([data-hero-end]) is parsed; it's then painted once, already in its final place. Pure CSS, so it
+   works in every engine and without JS; engines without :has() ignore the rule. */
+#mount:not(:has([data-hero-end])) {
+  visibility: hidden;
+}
+
 @keyframes mount-in {
   from {
     opacity: 0;
