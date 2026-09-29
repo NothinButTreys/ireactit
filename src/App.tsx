@@ -1,4 +1,4 @@
-import { profile } from '@/content/profile';
+import { Hero } from '@/features/hero/Hero';
 import { Nav } from '@/features/nav/Nav';
 import { SmoothScroll } from '@/lib/SmoothScroll';
 import { Section } from '@/ui/Section';
@@ -17,9 +17,7 @@ export function App() {
         className="mx-auto max-w-[78rem] px-4 pt-14 pb-[30vh] outline-none md:px-8 md:pb-0"
       >
         <Section id="mount" className="flex min-h-svh items-center py-16">
-          <h1 id="mount-title" className="text-[64px] leading-[0.95] font-bold tracking-[-0.045em] md:text-[120px]">
-            {profile.greeting}
-          </h1>
+          <Hero />
         </Section>
         <Section id="write" className="py-24">
           <SectionHeader step="write" />

@@ -26,3 +26,12 @@ export const SECTION_HEADERS: Record<Exclude<SectionId, 'mount'>, SectionHeaderC
     sub: 'Commit a message straight to my inbox. Or skip the terminal and find me below.',
   },
 };
+
+/** The component each lifecycle step "renders" — shown in the hero's render log. */
+export const SECTION_COMPONENTS: Record<SectionId, string> = {
+  mount: 'Trey',
+  write: 'TreyTsx',
+  tree: 'Career',
+  props: 'Projects',
+  commit: 'Contact',
+};

@@ -4,7 +4,8 @@ export const profile: Profile = {
   name: 'Trey McBride',
   wordmark: '<IReactIt/>',
   greeting: "Hi, I'm Trey.",
-  subline: 'I build React that feels effortless.',
+  subline: { lead: 'I build React that', emphasis: 'feels effortless.' },
+  badges: ['Principal Engineer', 'CXO @ PixelTable', 'React · TypeScript'],
   role: 'Principal Engineer',
   links: {
     github: 'https://github.com/NothinButTreys',

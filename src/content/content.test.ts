@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { SECTION_HEADERS, SECTION_IDS } from './sections';
+import { SECTION_COMPONENTS, SECTION_HEADERS, SECTION_IDS } from './sections';
 import { profile } from './profile';
 import { experience } from './experience';
 import { projects } from './projects';
@@ -28,12 +28,21 @@ describe('sections', () => {
   it('templates the tree title with the career length', () => {
     expect(SECTION_HEADERS.tree.title).toContain('{years}');
   });
+
+  it('names a component for every step', () => {
+    expect(SECTION_COMPONENTS).toEqual({ mount: 'Trey', write: 'TreyTsx', tree: 'Career', props: 'Projects', commit: 'Contact' });
+  });
 });
 
 describe('profile', () => {
   it('has https links for every external destination', () => {
     for (const href of Object.values(profile.links)) expect(href).toMatch(/^https:\/\//);
     expect(profile.wordmark).toBe('<IReactIt/>');
+  });
+
+  it('splits the subline for emphasis and lists three hero badges', () => {
+    expect(`${profile.subline.lead} ${profile.subline.emphasis}`).toBe('I build React that feels effortless.');
+    expect(profile.badges).toEqual(['Principal Engineer', 'CXO @ PixelTable', 'React · TypeScript']);
   });
 });
 

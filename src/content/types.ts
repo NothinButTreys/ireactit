@@ -35,7 +35,8 @@ export type Profile = {
   name: string;
   wordmark: string;
   greeting: string;
-  subline: string;
+  subline: { lead: string; emphasis: string };
+  badges: string[];
   role: string;
   links: { github: string; linkedin: string; resume: string; pixeltable: string };
 };

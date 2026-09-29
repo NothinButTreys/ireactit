@@ -15,7 +15,17 @@ export default defineConfig([
     rules: {
       'react-refresh/only-export-components': [
         'warn',
-        { allowExportNames: ['useRenderCount', 'useViewSource', 'useBump', 'useSectionProgress', 'NAV_OFFSET'] },
+        {
+          allowExportNames: [
+            'useRenderCount',
+            'useViewSource',
+            'useBump',
+            'useSectionProgress',
+            'NAV_OFFSET',
+            'HERO_TAG',
+            'HERO_TAG_SEGMENTS',
+          ],
+        },
       ],
     },
   },
