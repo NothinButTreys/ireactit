@@ -8,6 +8,7 @@ export function CodeView({ lines }: { lines: readonly (readonly Token[])[] }) {
   return (
     <pre
       ref={ref}
+      role="region"
       tabIndex={0}
       aria-label="Trey.tsx source"
       data-typed={seen ? '' : undefined}

@@ -46,6 +46,7 @@ describe('<SectionView />', () => {
     await userEvent.click(screen.getByRole('button', { name: 'View source' }));
     expect(await screen.findByText('src/features/hero/Hero.tsx')).toBeInTheDocument();
     expect(screen.queryByRole('heading', { name: 'Hello' })).not.toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'mount source' })).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: 'View source' }));
     expect(screen.getByRole('button', { name: 'clicked 1' })).toBeVisible();
   });

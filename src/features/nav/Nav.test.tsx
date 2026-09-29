@@ -50,7 +50,9 @@ describe('<Nav />', () => {
 
   it('shows the wordmark, the toggles and the render counter', () => {
     renderNav();
-    expect(screen.getByRole('link', { name: '<IReactIt/>' })).toHaveAttribute('href', '#mount');
+    const wordmark = screen.getByRole('link', { name: '<IReactIt/>' });
+    expect(wordmark).toHaveAttribute('href', '#mount');
+    expect(wordmark.className).toContain('min-h-11');
     expect(screen.getByRole('button', { name: 'View source' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /theme/ })).toBeInTheDocument();
     expect(screen.getByText('renders: 0')).toBeInTheDocument();

@@ -7,6 +7,7 @@ export function SourcePanel({ id }: { id: SectionId }) {
   const snippet = snippets[id];
   return (
     <div className="mount-in flex w-full flex-col gap-5 py-6">
+      <h2 className="sr-only">{id} source</h2>
       <p className="flex flex-wrap justify-between gap-2 font-mono text-[13px]">
         <span className="text-primary">
           {NUMBER[id]} — {id} · view source

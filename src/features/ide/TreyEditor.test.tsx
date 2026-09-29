@@ -20,6 +20,7 @@ describe('<TreyEditor />', () => {
     renderEditor();
     expect(code()).toHaveTextContent("mood = 'caffeinated',");
     expect(code()).toHaveTextContent('coffee = 3,');
+    expect(code()).toHaveAttribute('role', 'region');
   });
 
   it('re-renders code and preview when a prop changes, counting one render per change', async () => {

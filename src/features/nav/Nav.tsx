@@ -48,7 +48,7 @@ export function Nav() {
       </a>
       <header className="fixed inset-x-0 top-0 z-50 border-b border-border/60 bg-bg/75 backdrop-blur-md">
         <div className="mx-auto flex h-14 max-w-[78rem] items-center justify-between gap-4 px-4 md:px-8">
-          <a href="#mount" className="font-mono text-sm font-bold text-fg hover:text-primary">
+          <a href="#mount" className="inline-flex min-h-11 items-center font-mono text-sm font-bold text-fg hover:text-primary md:min-h-0">
             {profile.wordmark}
           </a>
           <nav aria-label="Render cycle" className="hidden md:block">
