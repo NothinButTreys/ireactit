@@ -1,4 +1,5 @@
 import { Hero } from '@/features/hero/Hero';
+import { WriteSection } from '@/features/ide/WriteSection';
 import { Nav } from '@/features/nav/Nav';
 import { SmoothScroll } from '@/lib/SmoothScroll';
 import { Section } from '@/ui/Section';
@@ -20,7 +21,7 @@ export function App() {
           <Hero />
         </Section>
         <Section id="write" className="py-24">
-          <SectionHeader step="write" />
+          <WriteSection />
         </Section>
         <Section id="tree" className="py-24">
           <SectionHeader step="tree" title="One component tree." />

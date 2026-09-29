@@ -208,3 +208,28 @@ body {
     filter: none;
   }
 }
+
+/* IDE: code lines stagger in the first time the editor is seen (JS only). */
+.code-line {
+  transition:
+    opacity 300ms var(--ease),
+    transform 300ms var(--ease);
+  transition-delay: calc(var(--i, 0) * 55ms);
+}
+.js .code-view:not([data-typed]) .code-line {
+  opacity: 0;
+  transform: translateX(-6px);
+}
+.radio-chip:has(input:focus-visible) > span {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .code-line {
+    transition: opacity 150ms linear;
+    transition-delay: 0ms;
+  }
+  .js .code-view:not([data-typed]) .code-line {
+    transform: none;
+  }
+}
