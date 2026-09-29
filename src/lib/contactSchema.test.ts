@@ -23,4 +23,10 @@ describe('contactSchema', () => {
   it('allows the honeypot field', () => {
     expect(contactSchema.safeParse({ ...valid, company: 'bot inc' }).success).toBe(true);
   });
+
+  it('trims whitespace from the email', () => {
+    const r = contactSchema.safeParse({ ...valid, email: 'ada@example.com ' });
+    expect(r.success).toBe(true);
+    expect(r.success && r.data.email).toBe('ada@example.com');
+  });
 });

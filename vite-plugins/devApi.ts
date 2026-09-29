@@ -46,6 +46,10 @@ export function devApi(): Plugin {
     configurePreviewServer(server) {
       let loader: Promise<ViteDevServer> | undefined;
       mount(server.middlewares, async () => {
+        // Safe to load without a config (and so without Vite's `@/` alias resolver):
+        // the server chain (api/**, src/features/contact/server/**, and the lib
+        // files it depends on) only ever uses relative `.js` imports, enforced by
+        // the eslint no-restricted-imports override and tsconfig.server.json.
         loader ??= createServer({ configFile: false, server: { middlewareMode: true }, appType: 'custom' });
         return (await loader).ssrLoadModule('/api/contact.ts') as Promise<ApiModule>;
       });
