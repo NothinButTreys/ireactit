@@ -1,3 +1,4 @@
+import { CareerTree } from '@/features/career-tree/CareerTree';
 import { Hero } from '@/features/hero/Hero';
 import { WriteSection } from '@/features/ide/WriteSection';
 import { Nav } from '@/features/nav/Nav';
@@ -23,8 +24,8 @@ export function App() {
         <Section id="write" className="py-24">
           <WriteSection />
         </Section>
-        <Section id="tree" className="py-24">
-          <SectionHeader step="tree" title="One component tree." />
+        <Section id="tree">
+          <CareerTree />
         </Section>
         <Section id="props" className="py-24">
           <SectionHeader step="props" />

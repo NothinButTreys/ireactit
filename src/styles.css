@@ -233,3 +233,22 @@ body {
     transform: none;
   }
 }
+
+/* Career tree: pinned, scroll-driven when JS runs and motion is allowed. */
+.js .career-pin {
+  height: 300svh;
+}
+.js .career-sticky {
+  position: sticky;
+  top: 3.5rem;
+  min-height: calc(100svh - 3.5rem);
+}
+@media (prefers-reduced-motion: reduce) {
+  .js .career-pin {
+    height: auto;
+  }
+  .js .career-sticky {
+    position: static;
+    min-height: 0;
+  }
+}

@@ -10,5 +10,6 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [react(), tailwindcss(), devApi()],
     resolve: { alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) } },
+    define: { __BUILD_YEAR__: JSON.stringify(new Date().getFullYear()) },
   };
 });

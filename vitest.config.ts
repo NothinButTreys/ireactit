@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 export default defineConfig({
   plugins: [react()],
   resolve: { alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) } },
+  define: { __BUILD_YEAR__: JSON.stringify(new Date().getFullYear()) },
   test: {
     environment: 'jsdom',
     setupFiles: ['./vitest.setup.ts'],
