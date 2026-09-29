@@ -4,4 +4,4 @@
 set -euo pipefail
 docker run --rm --ipc=host -v "$PWD":/work -v ireactit_nm:/work/node_modules -w /work \
   mcr.microsoft.com/playwright:v1.63.0-noble \
-  bash -lc "corepack enable && CI=true pnpm install --frozen-lockfile && pnpm build && pnpm exec playwright test tests/visual --project=chromium --project=mobile --update-snapshots"
+  bash -lc "corepack enable && CI=true pnpm install --frozen-lockfile --store-dir /work/node_modules/.pnpm-store && pnpm build && pnpm exec playwright test tests/visual --project=chromium --project=mobile --update-snapshots"
