@@ -1,5 +1,6 @@
 import js from '@eslint/js';
 import globals from 'globals';
+import jsxA11y from 'eslint-plugin-jsx-a11y';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import tseslint from 'typescript-eslint';
@@ -28,6 +29,10 @@ export default defineConfig([
         },
       ],
     },
+  },
+  {
+    files: ['src/**/*.tsx'],
+    extends: [jsxA11y.flatConfigs.recommended],
   },
   {
     // Test-only "probe" components intentionally mutate an outer render counter to observe

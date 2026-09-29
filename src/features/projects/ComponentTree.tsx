@@ -67,6 +67,10 @@ export function ComponentTree({ project, selected, onSelect }: Props) {
 
   return (
     <ul role="tree" aria-label={`${project.title} case study`} onKeyDown={onKeyDown} className="flex flex-col gap-0.5">
+      {/* WAI-ARIA tree pattern: keyboard activation (Enter/Space) is handled by the delegated
+          `onKeyDown` on the ancestor ul[role=tree] above, per the roving-tabindex tree pattern;
+          this treeitem only needs the pointer handler. */}
+      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events -- see comment above */}
       <li
         role="treeitem"
         aria-level={1}
@@ -91,6 +95,10 @@ export function ComponentTree({ project, selected, onSelect }: Props) {
         {state.expanded && (
           <ul role="group" className="mt-0.5 flex flex-col gap-0.5">
             {PROJECT_NODE_KEYS.map((key, i) => (
+              // WAI-ARIA tree pattern: keyboard activation (Enter/Space) is handled by the
+              // delegated `onKeyDown` on the ancestor ul[role=tree], per the roving-tabindex
+              // tree pattern; this treeitem only needs the pointer handler.
+              // eslint-disable-next-line jsx-a11y/click-events-have-key-events -- see comment above
               <li
                 key={key}
                 role="treeitem"

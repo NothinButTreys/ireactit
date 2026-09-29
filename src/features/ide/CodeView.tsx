@@ -9,6 +9,10 @@ export function CodeView({ lines }: { lines: readonly (readonly Token[])[] }) {
     <pre
       ref={ref}
       role="region"
+      // WAI-ARIA "scrollable region" pattern: this is horizontally scrollable (overflow-x-auto)
+      // and has no other focusable descendant, so tabIndex=0 is required for keyboard users to
+      // scroll it (WCAG 2.1.1).
+      // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- see comment above
       tabIndex={0}
       aria-label="Trey.tsx source"
       data-typed={seen ? '' : undefined}
