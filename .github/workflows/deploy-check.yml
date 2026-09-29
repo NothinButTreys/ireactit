@@ -1,10 +1,15 @@
 name: deploy-check
 on: deployment_status
+permissions:
+  contents: read
 jobs:
   deploy-check:
-    if: github.event.deployment_status.state == 'success'
+    if: github.event.deployment_status.state == 'success' && github.event.deployment.creator.login == 'vercel[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    concurrency:
+      group: deploy-check-${{ github.event.deployment.id }}
+      cancel-in-progress: true
     env:
       BASE_URL: ${{ github.event.deployment_status.target_url }}
       DITL_TOKEN: ${{ secrets.DITL_TOKEN }}
