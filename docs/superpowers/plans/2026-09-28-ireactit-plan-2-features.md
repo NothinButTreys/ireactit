@@ -3129,7 +3129,7 @@ import { treeKey, type TreeState } from './treeNav';
 type Props = { project: Project; selected: InspectorKey; onSelect: (key: InspectorKey) => void };
 
 const itemClass = (selected: boolean) =>
-  `flex h-8 cursor-pointer items-center rounded-md font-mono text-[13px] outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+  `flex h-11 md:h-8 cursor-pointer items-center rounded-md font-mono text-[13px] outline-none focus-visible:ring-2 focus-visible:ring-primary ${
     selected ? 'bg-primary/15 text-fg' : 'text-muted hover:text-fg'
   }`;
 
@@ -3275,7 +3275,7 @@ export function PropsPane({ project, selected, onSelect }: Props) {
       )}
       <nav aria-label="Case study steps" className="mt-auto flex items-center justify-between gap-2 font-mono text-xs text-muted">
         {prev ? (
-          <button type="button" onClick={() => onSelect(prev)} className="min-h-6 hover:text-fg">
+          <button type="button" onClick={() => onSelect(prev)} className="min-h-11 hover:text-fg md:min-h-6">
             ← {label(project, prev)}
           </button>
         ) : (
@@ -3287,7 +3287,7 @@ export function PropsPane({ project, selected, onSelect }: Props) {
           </span>
         )}
         {next ? (
-          <button type="button" onClick={() => onSelect(next)} className="min-h-6 hover:text-fg">
+          <button type="button" onClick={() => onSelect(next)} className="min-h-11 hover:text-fg md:min-h-6">
             {label(project, next)} →
           </button>
         ) : (
@@ -3360,7 +3360,7 @@ export function InspectorPanel({ project, opener, onClose }: Props) {
             type="button"
             aria-label="Close inspector"
             onClick={() => ref.current?.close()}
-            className="h-9 rounded-lg border border-border px-2.5 font-mono text-xs text-muted hover:text-fg"
+            className="h-11 rounded-lg border border-border px-2.5 font-mono text-xs text-muted hover:text-fg md:h-9"
           >
             Esc ✕
           </button>
@@ -3442,7 +3442,7 @@ export function ProjectCard({ project, onInspect }: Props) {
               href={primary.href}
               target="_blank"
               rel="noreferrer"
-              className="flex h-10 items-center rounded-lg px-3 text-sm text-muted transition-colors hover:text-fg"
+              className="flex h-11 items-center rounded-lg px-3 text-sm text-muted transition-colors hover:text-fg md:h-10"
             >
               Visit ↗<span className="sr-only"> {project.title} (opens in a new tab)</span>
             </a>
@@ -3453,7 +3453,7 @@ export function ProjectCard({ project, onInspect }: Props) {
             onPointerEnter={preloadInspector}
             onFocus={preloadInspector}
             onClick={(e) => onInspect(e.currentTarget)}
-            className="h-10 rounded-lg border border-primary bg-primary/10 px-3.5 font-mono text-[13px] text-primary transition-colors hover:bg-primary/20"
+            className="h-11 rounded-lg border border-primary bg-primary/10 px-3.5 font-mono text-[13px] text-primary transition-colors hover:bg-primary/20 md:h-10"
           >
             ⌘ Inspect<span className="sr-only"> {project.title}</span>
           </button>
