@@ -867,6 +867,8 @@ export type Experience = {
   start: string;
   end: string | null;
   highlights: string[];
+  /** 'recent' roles render as top-level tree nodes; 'early' roles nest inside one collapsible <EarlyCareer> node. */
+  era: 'recent' | 'early';
 };
 
 export type Profile = {
@@ -910,14 +912,32 @@ describe('profile', () => {
 });
 
 describe('experience', () => {
-  it('lists the five roles in spec order', () => {
-    expect(experience.map((e) => e.component)).toEqual([
+  it('lists the five recent roles in spec order', () => {
+    expect(experience.filter((e) => e.era === 'recent').map((e) => e.component)).toEqual([
       'PixelTable',
       'Sunstate',
       'RiskLens',
       'HostPapa',
       'Endurance',
     ]);
+  });
+
+  it('nests the six early roles, newest first, back to 2006', () => {
+    const early = experience.filter((e) => e.era === 'early');
+    expect(early.map((e) => e.component)).toEqual([
+      'OffMadisonAve',
+      'Pearson',
+      'Arrowhead',
+      'DynamicPageSolutions',
+      'Firesquire',
+      'Freelance',
+    ]);
+    expect(early.at(-1)?.start).toBe('2006-05');
+  });
+
+  it('keeps every recent role before every early role', () => {
+    const eras = experience.map((e) => e.era);
+    expect(eras.lastIndexOf('recent')).toBeLessThan(eras.indexOf('early'));
   });
 
   it.each(experience.map((e) => [e.company, e] as const))('%s has valid shape', (_, e) => {
@@ -1036,6 +1056,7 @@ export const experience: Experience[] = [
       'Owns the user experience across every PixelTable application',
       'Led the build-out of the Support Portal, a shared community hub for every game title',
     ],
+    era: 'recent',
   },
   {
     company: 'Sunstate Equipment Co.',
@@ -1048,6 +1069,7 @@ export const experience: Experience[] = [
       'Delivers complex features end to end alongside Product in an agile team',
       'Mentors and coaches engineers across the front end',
     ],
+    era: 'recent',
   },
   {
     company: 'RiskLens',
@@ -1056,6 +1078,7 @@ export const experience: Experience[] = [
     start: '2022-09',
     end: '2023-07',
     highlights: ['Built front-end features for cyber-risk quantification used to justify security investment decisions'],
+    era: 'recent',
   },
   {
     company: 'HostPapa',
@@ -1067,6 +1090,7 @@ export const experience: Experience[] = [
       'Owned technical breakdowns for upcoming front-end projects',
       'Guided front-end developers while shipping tickets every sprint',
     ],
+    era: 'recent',
   },
   {
     company: 'Endurance International Group',
@@ -1075,6 +1099,67 @@ export const experience: Experience[] = [
     start: '2017-06',
     end: '2021-06',
     highlights: ['Grew from Software Engineer I to Senior Software Engineer I over four years of front-end work'],
+    era: 'recent',
+  },
+  {
+    company: 'Off Madison Ave',
+    component: 'OffMadisonAve',
+    role: 'Senior Developer',
+    start: '2016-01',
+    end: '2017-06',
+    highlights: ['Built MEAN-stack websites for new and existing agency clients'],
+    era: 'early',
+  },
+  {
+    company: 'Pearson Embanet',
+    component: 'Pearson',
+    role: 'Web Developer',
+    start: '2015-04',
+    end: '2015-11',
+    highlights: [
+      'Built responsive sites with HTML5, CSS3/Sass and jQuery, much of it in WordPress',
+      'Led the team presentation and documentation on responsive email best practices',
+    ],
+    era: 'early',
+  },
+  {
+    company: 'Arrowhead Advertising',
+    component: 'Arrowhead',
+    role: 'Front-End Developer',
+    start: '2013-07',
+    end: '2015-03',
+    highlights: ['Developed client websites and internal applications, including a custom video-upload portal with the media team'],
+    era: 'early',
+  },
+  {
+    company: 'Dynamic Page Solutions',
+    component: 'DynamicPageSolutions',
+    role: 'Web Developer',
+    start: '2012-02',
+    end: '2013-07',
+    highlights: ['Built B2C client sites on a proprietary CMS and maintained its custom templating platform'],
+    era: 'early',
+  },
+  {
+    company: 'Firesquire.com',
+    component: 'Firesquire',
+    role: 'Front-End Developer',
+    start: '2009-01',
+    end: '2012-02',
+    highlights: [
+      'Turned designs into standards-compliant HTML/CSS and built custom WordPress themes and plugins',
+      'Ran client meetings to gather project specs',
+    ],
+    era: 'early',
+  },
+  {
+    company: 'Independent Contractor',
+    component: 'Freelance',
+    role: 'Developer',
+    start: '2006-05',
+    end: '2009-01',
+    highlights: ['Built websites start to finish and helped designers shape layouts and wireframes'],
+    era: 'early',
   },
 ];
 ```

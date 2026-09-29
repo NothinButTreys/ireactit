@@ -36,7 +36,7 @@ A fixed nav holds the wordmark, a **lifecycle rail** (`mount · write · tree ·
 |---|---|---|---|
 | 1 | mount | `mount` | The hero. The literal tag `<Trey role="Principal Engineer" />` assembles itself character by character, then "renders" (crossfades) into the headline. CTAs: **Inspect my work** (scrolls to `#props`) and **Commit a message** (scrolls to `#commit`). |
 | 2 | write | `write` | The **`Trey.tsx` IDE**. A split pane: the left types out a short component when first in view; the right is a live preview. Editable props: `mood` (select), `focus` (select), `coffee` (number 0–5), `stack` (toggle chips). Each change re-renders the preview and increments the render counter. |
-| 3 | tree | `tree` | **Experience as a component tree.** `<Career>` → `<PixelTable/>`, `<Sunstate/>`, `<RiskLens/>`, `<HostPapa/>`, `<Endurance/>`. The only pinned section: as the user scrolls, nodes expand in order and SVG connectors draw between them. Role and dates render as props; highlights render as children. |
+| 3 | tree | `tree` | **Experience as a component tree.** `<Career years={20}>` → `<PixelTable/>`, `<Sunstate/>`, `<RiskLens/>`, `<HostPapa/>`, `<Endurance/>`, then one collapsible `<EarlyCareer from="2006" to="2017">` holding six earlier roles (collapsed by default; expands like a DevTools subtree). The only pinned section: as the user scrolls, nodes expand in order and SVG connectors draw between them. Role and dates render as props; highlights render as children. |
 | 4 | props | `props` | **Projects.** Four cards: Daggerheart Card Creator, Alice is Missing: Digital Edition, PixelTable Support Portal, Natural World Library. Each has an **⌘ Inspect** button that opens the DevTools Inspector (§4). |
 | 5 | commit | `commit` | **Contact terminal.** `git commit -m` styled fields (name, email, message). Submitting shows a push log reflecting the real API result. |
 | — | footer | — | `// page rendered in {n}ms`, a real `performance` measurement, plus the external links. |
@@ -50,6 +50,12 @@ A fixed nav holds the wordmark, a **lifecycle rail** (`mount · write · tree ·
 | RiskLens | Senior Front-End Engineer | Sep 2022 – Jul 2023 |
 | HostPapa | Senior Software Engineer I | Jun 2021 – Jul 2022 |
 | Endurance International Group | Senior Software Engineer I; Software Engineer I | Jun 2017 – Jun 2021 |
+| *EarlyCareer:* Off Madison Ave | Senior Developer | Jan 2016 – Jun 2017 |
+| *EarlyCareer:* Pearson Embanet | Web Developer | Apr 2015 – Nov 2015 |
+| *EarlyCareer:* Arrowhead Advertising | Front-End Developer | Jul 2013 – Mar 2015 |
+| *EarlyCareer:* Dynamic Page Solutions | Web Developer | Feb 2012 – Jul 2013 |
+| *EarlyCareer:* Firesquire.com | Front-End Developer | Jan 2009 – Feb 2012 |
+| *EarlyCareer:* Independent Contractor | Developer | May 2006 – Jan 2009 |
 
 Highlights come from Trey's LinkedIn text. The PixelTable highlights are: the Daggerheart Card Creator with Critical Role and Darrington Press; Alice is Missing: Digital Edition; building out the platform and staying hands-on daily; owning UX across the apps; and leading the Support Portal.
 
