@@ -63,7 +63,8 @@ export function Nav() {
       </header>
       <nav
         aria-label="Render cycle"
-        className="fixed inset-x-3 bottom-4 z-50 rounded-full border border-border bg-card/90 p-1 backdrop-blur-md md:hidden"
+        // Opaque: a translucent pill over the hero's primary CTA drops the active link below 4.5:1.
+        className="fixed inset-x-3 bottom-4 z-50 rounded-full border border-border bg-card p-1 md:hidden"
       >
         <RailLinks active={active} variant="pill" />
       </nav>
