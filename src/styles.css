@@ -153,7 +153,9 @@ body {
   pointer-events: none;
   background-image: radial-gradient(hsl(var(--border)) 1px, transparent 1px);
   background-size: 24px 24px;
-  animation: drift 90s linear infinite;
+  /* 24px over 90s is ~0.27px/s: step a quarter pixel about once a second (96 steps) rather than every frame,
+     which is invisible but spares GPU-less and low-power browsers a full-viewport repaint each frame. */
+  animation: drift 90s steps(96) infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -37,6 +37,26 @@ test('the dot-grid drift stops under reduced motion', async ({ page }) => {
   expect(animationName).toBe('none');
 });
 
+test('the dot-grid drift steps about once a second instead of repainting every frame', async ({ page }) => {
+  // It drifts 24px in 90s (~0.27px/s), so a per-frame update is invisible but makes GPU-less browsers
+  // re-composite the full-viewport layer every frame.
+  await page.goto('/');
+  const changes = await page.locator('.dots-drift').evaluate(async (el) => {
+    let last = getComputedStyle(el).transform;
+    let count = 0;
+    const end = performance.now() + 2000;
+    while (performance.now() < end) {
+      await new Promise((r) => requestAnimationFrame(() => r(null)));
+      const now = getComputedStyle(el).transform;
+      if (now !== last) count++;
+      last = now;
+    }
+    return count;
+  });
+  expect(changes).toBeGreaterThan(0); // still drifting
+  expect(changes).toBeLessThanOrEqual(3);
+});
+
 test('at 700px width the footer text is not covered by the mobile pill rail', async ({ page }) => {
   await page.setViewportSize({ width: 700, height: 900 });
   await page.goto('/');
