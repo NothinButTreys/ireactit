@@ -151,8 +151,8 @@ export function CommitTerminal() {
 
         <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
           <label>
-            Company
-            <input name="company" tabIndex={-1} autoComplete="off" value={state.fields.company} onChange={(e) => edit('company', e.target.value)} />
+            Leave this empty
+            <input name="hp_url" tabIndex={-1} autoComplete="off" value={state.fields.hp_url} onChange={(e) => edit('hp_url', e.target.value)} />
           </label>
         </div>
 

@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { commitReducer, firstInvalidField, initialCommit, postCommit, validateCommit, type Fields } from './commitForm';
 
-const good: Fields = { name: 'Ada', email: 'ada@example.com', message: 'Loved the render cycle!', company: '' };
+const good: Fields = { name: 'Ada', email: 'ada@example.com', message: 'Loved the render cycle!', hp_url: '' };
 
 describe('commitReducer', () => {
   it('edits a field and clears only that field’s error', () => {

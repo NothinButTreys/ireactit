@@ -46,9 +46,16 @@ describe('POST /api/contact handler', () => {
 
   it('silently accepts honeypot submissions without sending', async () => {
     const { handler, send } = setup();
-    const res = await handler(req({ ...valid, company: 'spam co' }));
+    const res = await handler(req({ ...valid, hp_url: 'https://spam.example' }));
     expect(res.status).toBe(200);
     expect(send).not.toHaveBeenCalled();
+  });
+
+  it('still sends when a browser autofills a "company" field (it is not the honeypot)', async () => {
+    const { handler, send } = setup();
+    const res = await handler(req({ ...valid, company: 'Acme Ltd' }));
+    expect(res.status).toBe(200);
+    expect(send).toHaveBeenCalledOnce();
   });
 
   it('rate-limits by the first forwarded IP', async () => {

@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { contactSchema } from '@/lib/contactSchema';
 
-export type Fields = { name: string; email: string; message: string; company: string };
+export type Fields = { name: string; email: string; message: string; hp_url: string };
 export type FieldName = 'name' | 'email' | 'message';
 export type FieldErrors = Partial<Record<FieldName, string>>;
 export type CommitStatus = 'idle' | 'sending' | 'delivered' | 'rejected';
@@ -18,7 +18,7 @@ export type CommitAction =
 
 export const initialCommit: CommitState = {
   status: 'idle',
-  fields: { name: '', email: '', message: '', company: '' },
+  fields: { name: '', email: '', message: '', hp_url: '' },
   errors: {},
 };
 

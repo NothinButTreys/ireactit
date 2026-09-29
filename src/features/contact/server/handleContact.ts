@@ -30,7 +30,7 @@ export function createContactHandler({ send, limiter, ditlToken }: Deps) {
       return json(400, { ok: false, error: 'invalid', fieldErrors: z.flattenError(parsed.error).fieldErrors });
     }
 
-    if (parsed.data.company) return json(200, { ok: true });
+    if (parsed.data.hp_url) return json(200, { ok: true });
 
     const header = req.headers.get('x-ditl-token');
     // Check for a valid DITL token before the rate limiter so dry-run traffic

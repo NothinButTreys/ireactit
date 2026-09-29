@@ -105,8 +105,10 @@ describe('<CommitTerminal />', () => {
 
   it('hides the honeypot from people and the tab order', () => {
     renderTerminal();
-    const honeypot = document.querySelector<HTMLInputElement>('input[name="company"]')!;
+    expect(document.querySelector('input[name="company"]')).toBeNull();
+    const honeypot = document.querySelector<HTMLInputElement>('input[name="hp_url"]')!;
     expect(honeypot).toHaveAttribute('tabindex', '-1');
+    expect(honeypot).toHaveAttribute('autocomplete', 'off');
     expect(honeypot.closest('[aria-hidden="true"]')).not.toBeNull();
   });
 });

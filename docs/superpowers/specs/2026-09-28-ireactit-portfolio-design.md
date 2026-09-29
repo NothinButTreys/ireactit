@@ -156,7 +156,7 @@ scripts/
 
 ## 8. Contact API
 
-`POST /api/contact` with the body `{ name, email, message, company }`, where `company` is the honeypot field.
+`POST /api/contact` with the body `{ name, email, message, hp_url }`, where `hp_url` is the honeypot field (named so browser autofill won't fill it, unlike `company`).
 
 1. Parse the body with the shared zod schema (`lib/contactSchema.ts`: name 1–100 characters, a valid email, message 10–5000 characters). Invalid input returns **400** with field errors.
 2. If the honeypot is filled, return **200** without sending anything.

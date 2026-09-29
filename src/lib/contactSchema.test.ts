@@ -20,8 +20,10 @@ describe('contactSchema', () => {
     expect(contactSchema.safeParse({ ...valid, ...patch }).success).toBe(false);
   });
 
-  it('allows the honeypot field', () => {
-    expect(contactSchema.safeParse({ ...valid, company: 'bot inc' }).success).toBe(true);
+  it('allows and keeps the honeypot field (hp_url, a name autofill does not target)', () => {
+    const r = contactSchema.safeParse({ ...valid, hp_url: 'https://bot.example' });
+    expect(r.success).toBe(true);
+    expect(r.success && r.data.hp_url).toBe('https://bot.example');
   });
 
   it('trims whitespace from the email', () => {
