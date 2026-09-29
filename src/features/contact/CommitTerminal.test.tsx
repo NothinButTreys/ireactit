@@ -32,6 +32,25 @@ describe('<CommitTerminal />', () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
+  it('has an accessible name for the form itself', () => {
+    renderTerminal();
+    expect(screen.getByRole('form', { name: 'Contact form' })).toBeInTheDocument();
+  });
+
+  it('moves focus to the first invalid field (name) on an empty submit', async () => {
+    renderTerminal();
+    await userEvent.click(screen.getByRole('button', { name: 'git push' }));
+    expect(screen.getByLabelText(/--author/)).toHaveFocus();
+  });
+
+  it('moves focus to the first invalid field in name → email → message order', async () => {
+    renderTerminal();
+    await userEvent.type(screen.getByLabelText(/--author/), 'Ada Lovelace');
+    await userEvent.click(screen.getByRole('button', { name: 'git push' }));
+    expect(screen.getByLabelText(/--email/)).toHaveFocus();
+  });
+
+
   it('delivers, clears the form and counts a render', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response('{"ok":true}', { status: 200 })));
     renderTerminal();

@@ -33,6 +33,31 @@ test('a rejected push keeps the message', async ({ page }) => {
   await expect(page.getByLabel(/-m/)).toHaveValue('Hello from the contact e2e test.');
 });
 
+test('an empty submit moves focus to the name field, and to the first invalid field in order', async ({ page }) => {
+  await page.getByRole('button', { name: 'git push' }).click();
+  await expect(page.getByLabel(/--author/)).toBeFocused();
+
+  await page.getByLabel(/--author/).fill('Playwright Pat');
+  await page.getByRole('button', { name: 'git push' }).click();
+  await expect(page.getByLabel(/--email/)).toBeFocused();
+});
+
+test('the form has an accessible name', async ({ page }) => {
+  await expect(page.getByRole('form', { name: 'Contact form' })).toBeVisible();
+});
+
+test('the inputs meet the 44px touch target at mobile widths', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 900 });
+  // The terminal is wrapped in a <Reveal>, which briefly scales it down until its own
+  // IntersectionObserver fires; wait for that to settle before measuring the steady state.
+  await expect(page.locator('#commit [data-reveal]').last()).toHaveAttribute('data-shown', '');
+  await page.waitForTimeout(600); // let the reveal's 500ms scale/opacity/blur transition finish
+  for (const label of [/--author/, /--email/, /-m/]) {
+    const box = await page.getByLabel(label).boundingBox();
+    expect(box!.height).toBeGreaterThanOrEqual(44);
+  }
+});
+
 test('invalid input never reaches the network', async ({ page }) => {
   let called = false;
   await page.route('**/api/contact', (route) => {

@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { contactSchema } from '@/lib/contactSchema';
 
 export type Fields = { name: string; email: string; message: string; company: string };
-type FieldName = 'name' | 'email' | 'message';
+export type FieldName = 'name' | 'email' | 'message';
 export type FieldErrors = Partial<Record<FieldName, string>>;
 export type CommitStatus = 'idle' | 'sending' | 'delivered' | 'rejected';
 export type RejectReason = 'rate_limited' | 'send_failed' | 'network';
@@ -59,6 +59,11 @@ function firstErrors(fieldErrors: Record<string, string[] | undefined>): FieldEr
 export function validateCommit(fields: Fields): FieldErrors | null {
   const parsed = contactSchema.safeParse(fields);
   return parsed.success ? null : firstErrors(z.flattenError(parsed.error).fieldErrors);
+}
+
+/** The first invalid field, in name → email → message order (the order fields appear in the form). */
+export function firstInvalidField(errors: FieldErrors): FieldName | null {
+  return FIELD_NAMES.find((name) => errors[name]) ?? null;
 }
 
 type PostResult = Extract<CommitAction, { type: 'delivered' | 'invalid' | 'rejected' }>;

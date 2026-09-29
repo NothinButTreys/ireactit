@@ -1,4 +1,4 @@
-import { useId, type KeyboardEvent } from 'react';
+import { useId, useRef, type KeyboardEvent } from 'react';
 import { profile } from '@/content/profile';
 import type { CommitState, RejectReason } from './commitForm';
 import { useCommitForm } from './useCommitForm';
@@ -9,8 +9,8 @@ const REASONS: Record<RejectReason, string> = {
   network: 'network unreachable',
 };
 
-const inputClass =
-  'min-w-0 flex-1 border-0 bg-transparent font-mono text-[15px] text-fg placeholder:text-muted/70 aria-[invalid=true]:text-danger focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary';
+// Focus-visible ring comes from the global base rule (2px solid, 3px offset); no per-element override needed.
+const inputClass = 'min-w-0 flex-1 border-0 bg-transparent font-mono text-[15px] text-fg placeholder:text-muted/70 aria-[invalid=true]:text-danger';
 
 function PushLog({ state }: { state: CommitState }) {
   const pushed = state.status === 'sending' || state.status === 'delivered';
@@ -46,10 +46,20 @@ export function CommitTerminal() {
   const id = useId();
   const sending = state.status === 'sending';
 
+  const nameRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const messageRef = useRef<HTMLTextAreaElement>(null);
+  const fieldRefs = { name: nameRef, email: emailRef, message: messageRef };
+
+  async function handleSubmit() {
+    const invalidField = await submit();
+    if (invalidField) fieldRefs[invalidField].current?.focus();
+  }
+
   function onMessageKeyDown(e: KeyboardEvent<HTMLTextAreaElement>) {
     if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
       e.preventDefault();
-      void submit();
+      void handleSubmit();
     }
   }
 
@@ -71,10 +81,10 @@ export function CommitTerminal() {
   return (
     <form
       noValidate
-      aria-labelledby={`${id}-title`}
+      aria-label="Contact form"
       onSubmit={(e) => {
         e.preventDefault();
-        void submit();
+        void handleSubmit();
       }}
       className="relative flex flex-col overflow-hidden rounded-2xl border border-border bg-card"
     >
@@ -90,7 +100,14 @@ export function CommitTerminal() {
           <label htmlFor={`${id}-name`} className="w-24 shrink-0 font-mono text-sm text-accent">
             --author <span className="sr-only">(your name)</span>
           </label>
-          <input {...field('name')} autoComplete="name" placeholder="Ada Lovelace" onChange={(e) => edit('name', e.target.value)} className={`${inputClass} h-7`} />
+          <input
+            {...field('name')}
+            ref={nameRef}
+            autoComplete="name"
+            placeholder="Ada Lovelace"
+            onChange={(e) => edit('name', e.target.value)}
+            className={`${inputClass} h-11 md:h-7`}
+          />
         </div>
         {error('name')}
 
@@ -100,12 +117,13 @@ export function CommitTerminal() {
           </label>
           <input
             {...field('email')}
+            ref={emailRef}
             type="email"
             inputMode="email"
             autoComplete="email"
             placeholder="ada@example.com"
             onChange={(e) => edit('email', e.target.value)}
-            className={`${inputClass} h-7`}
+            className={`${inputClass} h-11 md:h-7`}
           />
         </div>
         {error('email')}
@@ -116,6 +134,7 @@ export function CommitTerminal() {
           </label>
           <textarea
             {...field('message')}
+            ref={messageRef}
             rows={3}
             placeholder="Loved the render cycle. Want to talk?"
             onChange={(e) => edit('message', e.target.value)}

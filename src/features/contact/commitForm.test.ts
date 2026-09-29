@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { commitReducer, initialCommit, postCommit, validateCommit, type Fields } from './commitForm';
+import { commitReducer, firstInvalidField, initialCommit, postCommit, validateCommit, type Fields } from './commitForm';
 
 const good: Fields = { name: 'Ada', email: 'ada@example.com', message: 'Loved the render cycle!', company: '' };
 
@@ -43,6 +43,14 @@ describe('validateCommit', () => {
     const errors = validateCommit({ ...good, name: '', email: 'nope', message: 'short' });
     expect(Object.keys(errors ?? {}).sort()).toEqual(['email', 'message', 'name']);
     expect(errors?.email).toBe('That email looks off');
+  });
+});
+
+describe('firstInvalidField', () => {
+  it('picks the first invalid field in name → email → message order', () => {
+    expect(firstInvalidField({ email: 'x', message: 'y' })).toBe('email');
+    expect(firstInvalidField({ message: 'y' })).toBe('message');
+    expect(firstInvalidField({})).toBeNull();
   });
 });
 
