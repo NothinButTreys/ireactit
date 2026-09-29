@@ -4653,6 +4653,7 @@ export function SourcePanel({ id }: { id: SectionId }) {
 ```tsx
 import { lazy, Suspense, useState, type ReactNode } from 'react';
 import type { SectionId } from '@/content/sections';
+import { ErrorBoundary } from '@/ui/ErrorBoundary';
 import { Section } from '@/ui/Section';
 import { useViewSource } from './ViewSource';
 
@@ -4672,9 +4673,11 @@ export function SectionView({ id, className, children }: Props) {
         {children}
       </div>
       {enabled && (
-        <Suspense fallback={<p className="w-full py-6 font-mono text-xs text-muted">loading source…</p>}>
-          <SourcePanel id={id} />
-        </Suspense>
+        <ErrorBoundary fallback={<p className="w-full py-6 font-mono text-xs text-muted">source unavailable — toggle off to render ↺</p>}>
+          <Suspense fallback={<p className="w-full py-6 font-mono text-xs text-muted">loading source…</p>}>
+            <SourcePanel id={id} />
+          </Suspense>
+        </ErrorBoundary>
       )}
     </Section>
   );
