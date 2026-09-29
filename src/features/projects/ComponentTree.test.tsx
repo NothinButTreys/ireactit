@@ -35,11 +35,27 @@ describe('<ComponentTree />', () => {
     expect(items[1]).toHaveAttribute('tabindex', '-1');
   });
 
-  it('gives the root treeitem an accessible name of just the component name, with the ring on the focusable root', () => {
+  it('gives the root treeitem an accessible name of just the component name', () => {
     render(<Harness />);
     const root = screen.getAllByRole('treeitem')[0]!;
     expect(root).toHaveAccessibleName(`<${project.name}>`);
-    expect(root).toHaveClass('focus-visible:ring-2');
+  });
+
+  it('puts the focus ring on the root row, not the root treeitem (which contains the whole subtree)', () => {
+    render(<Harness />);
+    const root = screen.getAllByRole('treeitem')[0]!;
+    expect(root).toHaveClass('outline-none');
+    expect(root).not.toHaveClass('focus-visible:ring-2');
+    const rootLabel = root.querySelector(':scope > span');
+    expect(rootLabel).toHaveClass('group-focus-visible/root:ring-2');
+    expect(rootLabel).toHaveClass('group-focus-visible/root:ring-primary');
+  });
+
+  it('keeps the focus-visible ring on child treeitems themselves', () => {
+    render(<Harness />);
+    const child = screen.getByText('<Outcome />').closest('[role="treeitem"]')!;
+    expect(child).toHaveClass('focus-visible:ring-2');
+    expect(child).toHaveClass('focus-visible:ring-primary');
   });
 
   it('moves focus with arrows and selects with Enter', async () => {

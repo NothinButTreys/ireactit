@@ -73,9 +73,15 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-:focus-visible {
-  outline: 2px solid hsl(var(--primary));
-  outline-offset: 3px;
+/* In Tailwind's `@layer base`, not the page's unlayered CSS, so a utility like `outline-none`
+   (Tailwind's `@layer utilities`, which cascades after `base` regardless of source order or
+   specificity) can still turn this off per-element — e.g. ComponentTree's root treeitem, whose
+   ring is drawn on its label row instead. */
+@layer base {
+  :focus-visible {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 3px;
+  }
 }
 
 /* ---------- Motion (CSS-first). Hidden states live under html.js so no-JS/prerendered HTML stays visible. ---------- */

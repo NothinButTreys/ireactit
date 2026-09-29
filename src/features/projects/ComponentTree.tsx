@@ -6,8 +6,17 @@ import { treeKey, type TreeState } from './treeNav';
 type Props = { project: Project; selected: InspectorKey; onSelect: (key: InspectorKey) => void };
 
 // Focus-visible ring belongs on the focusable element itself (the `li[role=treeitem]`), never
-// on a purely visual inner wrapper the browser never actually focuses.
-const focusRing = 'outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-md';
+// on a purely visual inner wrapper the browser never actually focuses. Child treeitems are leaf
+// rows, so the ring can live on the treeitem directly.
+const focusRing = 'outline-none focus-visible:ring-2 focus-visible:ring-primary';
+
+// The root treeitem is the ARIA tree's expanded container — it wraps the `ul[role=group]` of
+// children, so a ring drawn on the root li itself would wrap the whole subtree whenever the root
+// (the inspector's initial focus target) is focused. Instead the root li stays outline-none and
+// names a group (`group/root`); its label row draws the ring, scoped to `group-focus-visible`
+// so it only lights up on the *group element's own* :focus-visible, not a focused descendant.
+const rootFocusRing = 'group/root outline-none';
+const rootLabelRing = 'group-focus-visible/root:ring-2 group-focus-visible/root:ring-primary';
 
 const itemVisual = (selected: boolean) =>
   `flex h-11 md:h-8 cursor-pointer items-center rounded-md font-mono text-[13px] ${
@@ -69,9 +78,9 @@ export function ComponentTree({ project, selected, onSelect }: Props) {
           items.current[0] = el;
         }}
         onClick={() => choose(0)}
-        className={focusRing}
+        className={rootFocusRing}
       >
-        <span className={`${itemVisual(selected === 'root')} pl-3`}>
+        <span className={`${itemVisual(selected === 'root')} ${rootLabelRing} pl-3`}>
           <span aria-hidden className="mr-1.5 text-muted">
             {state.expanded ? '▾' : '▸'}
           </span>

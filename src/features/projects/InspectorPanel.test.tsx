@@ -23,11 +23,10 @@ describe('<InspectorPanel />', () => {
     expect(close).toHaveAccessibleName(expect.stringContaining('Esc'));
   });
 
-  it('survives a StrictMode double-invoked mount with the dialog left open and usable', () => {
-    const onClose = vi.fn();
+  it('stays open and focused after a StrictMode double mount', () => {
     render(
       <StrictMode>
-        <InspectorPanel project={project} opener={null} onClose={onClose} />
+        <InspectorPanel project={project} opener={null} onClose={() => {}} />
       </StrictMode>,
     );
     const dialog = screen.getByRole('dialog', { name: /inspecting/ });
