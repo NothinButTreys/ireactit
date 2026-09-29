@@ -15,5 +15,10 @@ const app = (
 );
 
 // Production HTML is prerendered, so hydrate; `vite dev` serves only the marker comment, so render.
-if (container.firstElementChild) hydrateRoot(container, app);
-else createRoot(container).render(app);
+if (container.firstElementChild) {
+  hydrateRoot(container, app, {
+    onRecoverableError: (error, info) => console.error('[hydration]', error, info.componentStack),
+  });
+} else {
+  createRoot(container).render(app);
+}
