@@ -4,7 +4,7 @@ import { FOCI, MAX_COFFEE, MOODS, STACK_OPTIONS, type Focus, type TreyAction, ty
 type Props = { value: TreyProps; onChange: (action: TreyAction) => void };
 
 const chip =
-  'inline-flex h-9 items-center rounded-lg border px-3 font-mono text-xs transition-colors cursor-pointer';
+  'inline-flex h-11 md:h-9 items-center rounded-lg border px-3 font-mono text-xs transition-colors cursor-pointer';
 const chipOff = 'border-border text-muted hover:text-fg';
 const chipOn = 'border-primary bg-primary/10 text-primary';
 
@@ -37,7 +37,7 @@ export function PropControls({ value, onChange }: Props) {
           id={`${id}-focus`}
           value={value.focus}
           onChange={(e) => onChange({ type: 'focus', focus: e.target.value as Focus })}
-          className="h-9 rounded-lg border border-border bg-bg px-2 font-mono text-xs text-fg"
+          className="h-11 md:h-9 rounded-lg border border-border bg-bg px-2 font-mono text-xs text-fg"
         >
           {FOCI.map((focus) => (
             <option key={focus} value={focus}>
@@ -56,7 +56,7 @@ export function PropControls({ value, onChange }: Props) {
           aria-label="Less coffee"
           disabled={value.coffee === 0}
           onClick={() => onChange({ type: 'coffee', delta: -1 })}
-          className="h-9 w-11 rounded-lg border border-border font-mono text-fg disabled:opacity-40"
+          className="h-11 md:h-9 w-11 rounded-lg border border-border font-mono text-fg disabled:opacity-40"
         >
           −
         </button>
@@ -68,7 +68,7 @@ export function PropControls({ value, onChange }: Props) {
           aria-label="More coffee"
           disabled={value.coffee === MAX_COFFEE}
           onClick={() => onChange({ type: 'coffee', delta: 1 })}
-          className="h-9 w-11 rounded-lg border border-border font-mono text-fg disabled:opacity-40"
+          className="h-11 md:h-9 w-11 rounded-lg border border-border font-mono text-fg disabled:opacity-40"
         >
           +
         </button>
