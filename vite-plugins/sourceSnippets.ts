@@ -25,10 +25,13 @@ function getHighlighter() {
 
 export async function renderSnippets(dir: string): Promise<Record<string, Snippet>> {
   const files = (await readdir(dir)).filter((file) => file.endsWith('.snippet')).sort();
-  const highlighter = await getHighlighter();
+  const [highlighter, sources] = await Promise.all([
+    getHighlighter(),
+    Promise.all(files.map((file) => readFile(join(dir, file), 'utf8'))),
+  ]);
   const out: Record<string, Snippet> = {};
-  for (const file of files) {
-    const code = (await readFile(join(dir, file), 'utf8')).trimEnd();
+  for (const [i, file] of files.entries()) {
+    const code = sources[i]!.trimEnd();
     const [firstLine = ''] = code.split('\n', 1);
     if (!firstLine.startsWith('// ')) throw new Error(`${file}: first line must be "// <path>"`);
     out[basename(file, '.snippet')] = {

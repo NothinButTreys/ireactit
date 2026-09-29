@@ -1,5 +1,5 @@
-import AxeBuilder from '@axe-core/playwright';
 import type { Page, TestInfo } from '@playwright/test';
+import { expectNoViolations } from '../axe';
 import { expect, test } from '../fixtures';
 
 export function ditlToken(): string | undefined {
@@ -60,9 +60,5 @@ async function settleReveals(page: Page) {
 
 export async function expectAxeClean(page: Page) {
   await settleReveals(page);
-  const { violations } = await new AxeBuilder({ page })
-    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
-    .analyze();
-  const blocking = violations.filter((v) => ['moderate', 'serious', 'critical'].includes(v.impact ?? ''));
-  expect(blocking, JSON.stringify(blocking, null, 2)).toEqual([]);
+  await expectNoViolations(page);
 }

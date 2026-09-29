@@ -1,15 +1,8 @@
-import AxeBuilder from '@axe-core/playwright';
 import type { Page } from '@playwright/test';
+import { expectNoViolations } from '../axe';
 import { expect, test } from '../fixtures';
 
-const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 const HERO_MOUNT_TIMEOUT = 15_000;
-
-async function expectNoViolations(page: Page) {
-  const { violations } = await new AxeBuilder({ page }).withTags(TAGS).analyze();
-  const blocking = violations.filter((v) => ['moderate', 'serious', 'critical'].includes(v.impact ?? ''));
-  expect(blocking, JSON.stringify(blocking, null, 2)).toEqual([]);
-}
 
 /** Scrolls the whole page so every `[data-reveal]` mounts, then returns to the top. */
 async function scrollWholePage(page: Page) {

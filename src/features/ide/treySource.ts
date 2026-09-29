@@ -1,6 +1,6 @@
 import { MOODS, type TreyProps } from './treyProps';
 
-export type TokenKind = 'kw' | 'tag' | 'prop' | 'str' | 'num' | 'punct' | 'plain';
+type TokenKind = 'kw' | 'tag' | 'prop' | 'str' | 'num' | 'punct' | 'plain';
 export type Token = { text: string; kind: TokenKind };
 
 const t = (text: string, kind: TokenKind = 'plain'): Token => ({ text, kind });

@@ -5,7 +5,7 @@ export const FOCI = ['design systems', 'performance', 'developer experience', 'a
 export type Focus = (typeof FOCI)[number];
 
 export const STACK_OPTIONS = ['React', 'TypeScript', 'Node', 'Vite', 'Tailwind', 'Playwright'] as const;
-export type Tech = (typeof STACK_OPTIONS)[number];
+type Tech = (typeof STACK_OPTIONS)[number];
 
 export const MAX_COFFEE = 5;
 

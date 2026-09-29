@@ -3,13 +3,13 @@ import { contactSchema } from '@/lib/contactSchema';
 
 export type Fields = { name: string; email: string; message: string; hp_url: string };
 export type FieldName = 'name' | 'email' | 'message';
-export type FieldErrors = Partial<Record<FieldName, string>>;
-export type CommitStatus = 'idle' | 'sending' | 'delivered' | 'rejected';
+type FieldErrors = Partial<Record<FieldName, string>>;
+type CommitStatus = 'idle' | 'sending' | 'delivered' | 'rejected';
 export type RejectReason = 'rate_limited' | 'send_failed' | 'network';
 
 export type CommitState = { status: CommitStatus; fields: Fields; errors: FieldErrors; reason?: RejectReason };
 
-export type CommitAction =
+type CommitAction =
   | { type: 'edit'; field: keyof Fields; value: string }
   | { type: 'invalid'; errors: FieldErrors }
   | { type: 'send' }

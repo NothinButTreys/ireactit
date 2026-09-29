@@ -1,7 +1,7 @@
 export const SECTION_IDS = ['mount', 'write', 'tree', 'props', 'commit'] as const;
 export type SectionId = (typeof SECTION_IDS)[number];
 
-export type SectionHeaderCopy = { num: string; title: string; sub?: string };
+type SectionHeaderCopy = { num: string; title: string; sub?: string };
 
 /** Header copy for each step. The tree title is templated with the career length at render time. */
 export const SECTION_HEADERS: Record<Exclude<SectionId, 'mount'>, SectionHeaderCopy> = {

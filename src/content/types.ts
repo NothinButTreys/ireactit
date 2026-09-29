@@ -3,7 +3,7 @@ export type ProjectNodeKey = (typeof PROJECT_NODE_KEYS)[number];
 
 export type Highlight = { x: number; y: number; w: number; h: number };
 
-export type ProjectNode = { body: string; highlight?: Highlight };
+type ProjectNode = { body: string; highlight?: Highlight };
 
 export type Project = {
   slug: string;
