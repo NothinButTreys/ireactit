@@ -23,6 +23,6 @@ test('section headers reveal as they scroll into view', async ({ page }) => {
   await page.goto('/');
   const header = page.locator('#props [data-reveal]').first();
   await expect(header).not.toHaveAttribute('data-shown');
-  await page.locator('#props').scrollIntoViewIfNeeded();
+  await header.scrollIntoViewIfNeeded();
   await expect(header).toHaveAttribute('data-shown', '');
 });

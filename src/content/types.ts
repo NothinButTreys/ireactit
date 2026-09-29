@@ -14,7 +14,8 @@ export type Project = {
   team?: string;
   stack: string[];
   links: { label: string; href: string }[];
-  screenshot: { src: string; alt: string };
+  /** `src` is added once a real screenshot exists in /public/projects; until then a schematic is drawn. */
+  screenshot: { alt: string; src?: string };
   nodes: Record<ProjectNodeKey, ProjectNode>;
   /** Flipped to true by Trey after fact-checking; Plan 3 blocks launch until every project is reviewed. */
   reviewed: boolean;

@@ -107,6 +107,7 @@ describe('projects', () => {
     expect(p.links.length).toBeGreaterThan(0);
     for (const l of p.links) expect(l.href).toMatch(/^https:\/\//);
     expect(p.screenshot.alt.length).toBeGreaterThan(10);
+    if (p.screenshot.src) expect(p.screenshot.src).toMatch(/^\/projects\/.+\.(webp|png|jpg)$/);
     expect(Object.keys(p.nodes).sort()).toEqual([...PROJECT_NODE_KEYS].sort());
 
     const total = PROJECT_NODE_KEYS.reduce((n, k) => n + wordCount(p.nodes[k].body), 0);

@@ -10,7 +10,7 @@ export const projects: Project[] = [
     team: 'PixelTable × Critical Role × Darrington Press',
     stack: ['React', 'TypeScript'],
     links: [{ label: 'Open the Card Creator', href: 'https://www.daggerheart.com/card-creator' }],
-    screenshot: { src: '/projects/daggerheart-card-creator.webp', alt: 'The Daggerheart Card Creator editing a custom domain card' },
+    screenshot: { alt: 'The Daggerheart Card Creator editing a custom domain card' },
     nodes: {
       problem: {
         body: 'Daggerheart players wanted to make homebrew cards that looked and felt official, and creators publishing under the Community Game License needed a sanctioned way to produce them. Hand-built templates in image editors were slow, inconsistent and easy to get wrong.',
@@ -39,7 +39,7 @@ export const projects: Project[] = [
     team: 'PixelTable',
     stack: ['React', 'TypeScript', 'Real-time messaging'],
     links: [{ label: 'Play Alice is Missing', href: 'https://aliceismissing.com' }],
-    screenshot: { src: '/projects/alice-is-missing.webp', alt: 'Players exchanging in-character text messages during a session' },
+    screenshot: { alt: 'Players exchanging in-character text messages during a session' },
     nodes: {
       problem: {
         body: 'Alice is Missing is a silent role-playing game: for ninety minutes players never speak and only text each other in character. Bringing that to the web meant recreating the tension of a group chat without breaking the spell of the table.',
@@ -68,7 +68,7 @@ export const projects: Project[] = [
     team: 'PixelTable',
     stack: ['React', 'TypeScript'],
     links: [{ label: 'Visit PixelTable', href: 'https://pixeltable.net' }],
-    screenshot: { src: '/projects/support-portal.webp', alt: 'The PixelTable Support Portal showing community discussion threads' },
+    screenshot: { alt: 'The PixelTable Support Portal showing community discussion threads' },
     nodes: {
       problem: {
         body: 'Players across PixelTable titles had nowhere shared to ask questions, report issues or talk about the games, and the team had no single place to hear from them. Support and community conversations were scattered.',
@@ -97,7 +97,7 @@ export const projects: Project[] = [
     team: 'PixelTable',
     stack: ['React', 'TypeScript', 'Search & data'],
     links: [{ label: 'Explore the Library', href: 'https://www.thenaturalworldlibrary.com/' }],
-    screenshot: { src: '/projects/natural-world-library.webp', alt: 'A species entry in the Natural World Library field guide' },
+    screenshot: { alt: 'A species entry in the Natural World Library field guide' },
     nodes: {
       problem: {
         body: 'Amateur enthusiasts and professional researchers needed one trustworthy place to identify fungi, plants, herbs and minerals: a reference deep enough for experts yet approachable for someone standing in a forest with a phone.',

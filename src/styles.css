@@ -252,3 +252,48 @@ body {
     min-height: 0;
   }
 }
+
+/* Inspector: native modal <dialog> as a bottom sheet (full screen on phones). */
+dialog.inspector {
+  margin: auto auto 0;
+  width: min(100% - 6rem, 1344px);
+  max-width: none;
+  height: min(70vh, 640px);
+  max-height: none;
+  padding: 0;
+  border: 1px solid hsl(var(--border));
+  border-bottom: 0;
+  border-radius: 18px 18px 0 0;
+  background: hsl(var(--card));
+  color: hsl(var(--fg));
+  box-shadow: 0 -24px 80px rgb(0 0 0 / 0.5);
+}
+dialog.inspector::backdrop {
+  background: rgb(2 4 8 / 0.55);
+}
+dialog.inspector[open] .inspector-sheet {
+  animation: sheet-in 420ms var(--ease) both;
+}
+@keyframes sheet-in {
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+}
+html[data-inspector-open] {
+  overflow: hidden;
+}
+@media (max-width: 767px) {
+  dialog.inspector {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+    border: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  dialog.inspector[open] .inspector-sheet {
+    animation: fade-in 150ms linear both;
+  }
+}

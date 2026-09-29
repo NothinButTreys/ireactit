@@ -2,6 +2,7 @@ import { CareerTree } from '@/features/career-tree/CareerTree';
 import { Hero } from '@/features/hero/Hero';
 import { WriteSection } from '@/features/ide/WriteSection';
 import { Nav } from '@/features/nav/Nav';
+import { Projects } from '@/features/projects/Projects';
 import { SmoothScroll } from '@/lib/SmoothScroll';
 import { Section } from '@/ui/Section';
 import { SectionHeader } from '@/ui/SectionHeader';
@@ -28,7 +29,7 @@ export function App() {
           <CareerTree />
         </Section>
         <Section id="props" className="py-24">
-          <SectionHeader step="props" />
+          <Projects />
         </Section>
         <Section id="commit" className="py-24">
           <SectionHeader step="commit" />
