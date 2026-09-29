@@ -29,7 +29,7 @@ test.describe('without JavaScript', () => {
 });
 
 test.describe('app bundle fails to load', () => {
-  test.use({ allowConsoleErrors: [/Failed to load resource|net::ERR_FAILED/] });
+  test.use({ allowConsoleErrors: /Failed to load resource|net::ERR_FAILED/ });
 
   test('falls back to visible content after the 3s failsafe', async ({ page }) => {
     await page.route('**/assets/index-*.js', (route) => route.abort());

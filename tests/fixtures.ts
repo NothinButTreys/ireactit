@@ -8,8 +8,12 @@ type ConsoleFailure = { type: 'pageerror' | 'console.error'; text: string };
  * were recorded. This turns silent hydration mismatches and runtime errors
  * into loud test failures instead of passing specs that hid a broken page.
  */
-export const test = base.extend<{ allowConsoleErrors: RegExp[]; forbidConsoleErrors: void }>({
-  allowConsoleErrors: [[], { option: true }],
+/**
+ * `allowConsoleErrors` is a single RegExp (use alternation for several patterns), never an array: Playwright
+ * reads an array fixture value as a `[value, options]` tuple, so `[reA, reB]` would silently drop `reB`.
+ */
+export const test = base.extend<{ allowConsoleErrors: RegExp | null; forbidConsoleErrors: void }>({
+  allowConsoleErrors: [null, { option: true }],
   forbidConsoleErrors: [
     async ({ page, allowConsoleErrors }, use) => {
       const failures: ConsoleFailure[] = [];
@@ -18,7 +22,7 @@ export const test = base.extend<{ allowConsoleErrors: RegExp[]; forbidConsoleErr
         failures.push({ type: 'pageerror', text: error.stack ?? error.message });
       };
       const onConsole = (msg: import('@playwright/test').ConsoleMessage) => {
-        if (msg.type() === 'error' && !allowConsoleErrors.some((re) => re.test(msg.text()))) {
+        if (msg.type() === 'error' && !allowConsoleErrors?.test(msg.text())) {
           failures.push({ type: 'console.error', text: msg.text() });
         }
       };

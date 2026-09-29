@@ -1,6 +1,6 @@
 import { expect, test } from '../fixtures';
 
-test.use({ allowConsoleErrors: [/Failed to load resource: the server responded with a status of (400|429|502)/] });
+test.use({ allowConsoleErrors: /Failed to load resource: the server responded with a status of (400|429|502)/ });
 
 async function fill(page: import('@playwright/test').Page) {
   await page.getByLabel(/--author/).fill('Playwright Pat');
