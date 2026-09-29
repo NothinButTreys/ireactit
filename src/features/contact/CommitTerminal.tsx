@@ -10,7 +10,7 @@ const REASONS: Record<RejectReason, string> = {
 };
 
 const inputClass =
-  'min-w-0 flex-1 border-0 bg-transparent font-mono text-[15px] text-fg outline-none placeholder:text-muted/70 aria-[invalid=true]:text-danger';
+  'min-w-0 flex-1 border-0 bg-transparent font-mono text-[15px] text-fg placeholder:text-muted/70 aria-[invalid=true]:text-danger focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary';
 
 function PushLog({ state }: { state: CommitState }) {
   const pushed = state.status === 'sending' || state.status === 'delivered';

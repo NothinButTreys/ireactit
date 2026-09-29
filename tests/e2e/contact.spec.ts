@@ -47,3 +47,15 @@ test('invalid input never reaches the network', async ({ page }) => {
 test('the footer reports a real render time', async ({ page }) => {
   await expect(page.locator('footer')).toContainText(/page rendered in \d+ms/);
 });
+
+test('the author field shows a visible keyboard focus indicator', async ({ page }) => {
+  const author = page.getByLabel(/--author/);
+  await author.focus();
+
+  const { outlineStyle, boxShadow } = await author.evaluate((el) => {
+    const style = getComputedStyle(el);
+    return { outlineStyle: style.outlineStyle, boxShadow: style.boxShadow };
+  });
+
+  expect(outlineStyle !== 'none' || boxShadow !== 'none').toBe(true);
+});
