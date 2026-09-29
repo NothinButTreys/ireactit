@@ -1,0 +1,22 @@
+// src/features/career-tree/CareerTree.tsx
+export function CareerTree() {
+  const ref = useRef<HTMLDivElement>(null);
+  const scrollDriven = useHydrated() && !usePrefersReducedMotion();
+  const mounted = useCareerProgress(ref, TOTAL, scrollDriven);
+
+  return (
+    <div ref={ref} className="career-pin">
+      <ol>
+        {recent.map((role, i) => (
+          <TreeNode
+            key={role.component}
+            role={role}
+            mounted={i < mounted}
+            expanded={!scrollDriven || i === mounted - 1}
+          />
+        ))}
+        <EarlyCareerNode roles={early} mounted={mounted === TOTAL} />
+      </ol>
+    </div>
+  );
+}

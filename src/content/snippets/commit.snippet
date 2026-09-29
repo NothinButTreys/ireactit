@@ -1,0 +1,16 @@
+// src/features/contact/useCommitForm.ts
+export function useCommitForm() {
+  const [state, dispatch] = useReducer(commitReducer, initialCommit);
+  const bump = useBump();
+
+  async function submit() {
+    const errors = validateCommit(state.fields); // same zod schema as the API
+    if (errors) return dispatch({ type: 'invalid', errors });
+    dispatch({ type: 'send' });
+    const result = await postCommit(state.fields);
+    dispatch(result); // delivered | invalid | rejected (keeps your message)
+    if (result.type === 'delivered') bump();
+  }
+
+  return { state, submit };
+}

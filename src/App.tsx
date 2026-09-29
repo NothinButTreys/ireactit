@@ -5,8 +5,8 @@ import { Hero } from '@/features/hero/Hero';
 import { WriteSection } from '@/features/ide/WriteSection';
 import { Nav } from '@/features/nav/Nav';
 import { Projects } from '@/features/projects/Projects';
+import { SectionView } from '@/features/view-source/SectionView';
 import { SmoothScroll } from '@/lib/SmoothScroll';
-import { Section } from '@/ui/Section';
 import { Providers } from './Providers';
 
 export function App() {
@@ -20,21 +20,21 @@ export function App() {
         tabIndex={-1}
         className="mx-auto max-w-[78rem] px-4 pt-14 pb-24 outline-none md:px-8 md:pb-0"
       >
-        <Section id="mount" className="flex min-h-svh items-center py-16">
+        <SectionView id="mount" className="flex min-h-svh items-center py-16">
           <Hero />
-        </Section>
-        <Section id="write" className="py-24">
+        </SectionView>
+        <SectionView id="write" className="py-24">
           <WriteSection />
-        </Section>
-        <Section id="tree">
+        </SectionView>
+        <SectionView id="tree">
           <CareerTree />
-        </Section>
-        <Section id="props" className="py-24">
+        </SectionView>
+        <SectionView id="props" className="py-24">
           <Projects />
-        </Section>
-        <Section id="commit" className="py-24">
+        </SectionView>
+        <SectionView id="commit" className="py-24">
           <CommitSection />
-        </Section>
+        </SectionView>
       </main>
       <Footer />
     </Providers>

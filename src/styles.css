@@ -303,3 +303,22 @@ html[data-inspector-open] {
     animation: fade-in 150ms linear both;
   }
 }
+
+/* Shiki css-variables theme → site tokens (follows light/dark). */
+:root {
+  --shiki-foreground: hsl(var(--fg));
+  --shiki-background: transparent;
+  --shiki-token-keyword: hsl(var(--syntax-keyword));
+  --shiki-token-string: hsl(var(--success));
+  --shiki-token-string-expression: hsl(var(--success));
+  --shiki-token-constant: hsl(var(--accent));
+  --shiki-token-parameter: hsl(var(--accent));
+  --shiki-token-function: hsl(var(--primary));
+  --shiki-token-comment: hsl(var(--muted));
+  --shiki-token-punctuation: hsl(var(--muted));
+  --shiki-token-link: hsl(var(--primary));
+}
+.source-code pre {
+  margin: 0;
+  background: transparent !important;
+}

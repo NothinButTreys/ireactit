@@ -7,14 +7,14 @@
     "node": ">=20.19"
   },
   "scripts": {
-    "dev": "vite",
-    "build": "tsc --noEmit && vite build && vite build --ssr src/entry-server.tsx --outDir dist-server && tsx scripts/prerender.ts",
-    "preview": "vite preview --port 4173 --strictPort",
+    "dev": "VITE_CONFIG_NATIVE_IGNORE_WARNING=true vite",
+    "build": "VITE_CONFIG_NATIVE_IGNORE_WARNING=true bash -c 'tsc --noEmit && vite build && vite build --ssr src/entry-server.tsx --outDir dist-server && tsx scripts/prerender.ts'",
+    "preview": "VITE_CONFIG_NATIVE_IGNORE_WARNING=true vite preview --port 4173 --strictPort",
     "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.server.json",
     "lint": "eslint .",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "coverage": "vitest run --coverage",
+    "test": "VITE_CONFIG_NATIVE_IGNORE_WARNING=true vitest run",
+    "test:watch": "VITE_CONFIG_NATIVE_IGNORE_WARNING=true vitest",
+    "coverage": "VITE_CONFIG_NATIVE_IGNORE_WARNING=true vitest run --coverage",
     "e2e": "playwright test",
     "e2e:ditl": "playwright test tests/ditl"
   },
@@ -46,6 +46,7 @@
     "eslint-plugin-react-refresh": "^0.5.7",
     "globals": "^17.12.0",
     "jsdom": "^29.1.1",
+    "shiki": "^4.4.3",
     "tailwindcss": "^4.3.3",
     "tsx": "^4.23.15",
     "typescript": "~6.0.3",
