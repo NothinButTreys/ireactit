@@ -23,6 +23,18 @@ describe('<ErrorBoundary />', () => {
     spy.mockRestore();
   });
 
+  it('reports the caught error to onError', () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const onError = vi.fn();
+    render(
+      <ErrorBoundary fallback={<p>fallback</p>} onError={onError}>
+        <Bomb />
+      </ErrorBoundary>,
+    );
+    expect(onError).toHaveBeenCalledWith(expect.objectContaining({ message: 'boom' }));
+    spy.mockRestore();
+  });
+
   it('renders its children normally when nothing throws', () => {
     render(
       <ErrorBoundary fallback={<p>fallback</p>}>

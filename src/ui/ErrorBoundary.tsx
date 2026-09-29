@@ -1,6 +1,6 @@
 import { Component, type ReactNode } from 'react';
 
-type Props = { fallback: ReactNode; children: ReactNode };
+type Props = { fallback: ReactNode; children: ReactNode; onError?: (error: unknown) => void };
 type State = { hasError: boolean };
 
 /**
@@ -17,6 +17,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
   override componentDidCatch(error: unknown, info: { componentStack?: string | null }) {
     console.error('ErrorBoundary caught an error', error, info.componentStack);
+    this.props.onError?.(error);
   }
 
   override render() {
