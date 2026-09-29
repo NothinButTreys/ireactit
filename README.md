@@ -179,6 +179,6 @@ To re-record the Inspector demo above, run `pnpm build && pnpm readme:gif`.
 
 ## Licence and credits
 
-© 2026 Trey McBride. The source is public to read and learn from. No open-source licence is granted, so all rights are reserved.
+© 2026 Trey McBride. Released under the [MIT License](LICENSE).
 
 Built with [React](https://react.dev), [Vite](https://vite.dev), [Tailwind CSS](https://tailwindcss.com), [Motion](https://motion.dev), [Lenis](https://lenis.darkroom.engineering), [Shiki](https://shiki.style), [Zod](https://zod.dev) and [Resend](https://resend.com). Set in [Space Grotesk](https://fonts.google.com/specimen/Space+Grotesk) and [JetBrains Mono](https://www.jetbrains.com/lp/mono/).
