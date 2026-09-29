@@ -3,6 +3,7 @@ import type { Page } from '@playwright/test';
 import { expect, test } from '../fixtures';
 
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
+const HERO_MOUNT_TIMEOUT = 15_000;
 
 async function expectNoViolations(page: Page) {
   const { violations } = await new AxeBuilder({ page }).withTags(TAGS).analyze();
@@ -57,11 +58,15 @@ for (const theme of ['dark', 'light'] as const) {
       await expect(page.getByText('Tell me your name')).toBeVisible();
       await expectNoViolations(page);
     });
+  });
 
-    test('page, motion allowed', async ({ page }) => {
+  // Its own describe: the reduced-motion beforeEach above would load and scroll the page a second time.
+  test.describe(`${theme} theme, motion allowed`, () => {
+    test('page', async ({ page }) => {
       await page.emulateMedia({ colorScheme: theme, reducedMotion: 'no-preference' });
       await page.goto('/');
-      await expect(page.locator('[data-hero]')).toHaveAttribute('data-mounted', '');
+      // The hero types its tag before it mounts; allow for a busy machine.
+      await expect(page.locator('[data-hero]')).toHaveAttribute('data-mounted', '', { timeout: HERO_MOUNT_TIMEOUT });
       await scrollWholePage(page);
       await expectNoViolations(page);
     });
