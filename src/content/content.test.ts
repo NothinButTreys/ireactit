@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { SECTION_IDS, SECTION_LABELS } from './sections';
+import { SECTION_HEADERS, SECTION_IDS } from './sections';
 import { profile } from './profile';
 import { experience } from './experience';
 import { projects } from './projects';
@@ -12,7 +12,21 @@ const wordCount = (s: string) => s.trim().split(/\s+/).length;
 describe('sections', () => {
   it('follows the render cycle order', () => {
     expect(SECTION_IDS).toEqual(['mount', 'write', 'tree', 'props', 'commit']);
-    for (const id of SECTION_IDS) expect(SECTION_LABELS[id]).toBeTruthy();
+  });
+
+  it('has header copy for every non-mount section, numbered 02..05 in order', () => {
+    const nonMount = SECTION_IDS.filter((id) => id !== 'mount');
+    const nums = nonMount.map((id) => SECTION_HEADERS[id].num);
+    expect(nums).toEqual(['02', '03', '04', '05']);
+    for (const id of nonMount) {
+      const header = SECTION_HEADERS[id];
+      expect(header.num).toMatch(/^\d{2}$/);
+      expect(header.title.length).toBeGreaterThan(0);
+    }
+  });
+
+  it('templates the tree title with the career length', () => {
+    expect(SECTION_HEADERS.tree.title).toContain('{years}');
   });
 });
 

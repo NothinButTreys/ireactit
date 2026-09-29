@@ -24,7 +24,7 @@ export function ViewSourceToggle() {
       type="button"
       onClick={toggle}
       aria-pressed={enabled}
-      className="h-8 rounded-lg border border-border px-3 font-mono text-xs text-muted transition-colors hover:text-primary aria-pressed:border-primary aria-pressed:bg-primary/10 aria-pressed:text-primary"
+      className="h-11 rounded-lg border border-border px-3 font-mono text-xs text-muted transition-colors hover:text-primary aria-pressed:border-primary aria-pressed:bg-primary/10 aria-pressed:text-primary md:h-8"
     >
       View source
     </button>
