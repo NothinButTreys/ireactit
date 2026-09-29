@@ -16,6 +16,9 @@
          (and before a #hash deep link scrolls), instead of swapping and shifting what's above the target. -->
     <link rel="preload" as="font" type="font/woff2" crossorigin href="/node_modules/@fontsource-variable/space-grotesk/files/space-grotesk-latin-wght-normal.woff2" />
     <link rel="preload" as="font" type="font/woff2" crossorigin href="/node_modules/@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2" />
+    <!-- Don't paint until the whole hero is parsed (#write follows it). On a slow phone the parser yields
+         mid-hero; the vertically centred hero then grows and re-centres after first paint (layout shift). -->
+    <link rel="expect" href="#write" blocking="render" />
     <script>
       document.documentElement.classList.add('js');
       setTimeout(function () {

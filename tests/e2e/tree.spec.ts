@@ -125,6 +125,16 @@ test.describe('loading into the tree', () => {
     console.log(`/#tree load CLS (${isMobile ? 'mobile' : 'desktop'}): ${cls.toFixed(4)}`);
     expect(cls).toBeLessThan(0.05);
   });
+
+  test('deep-linking to /#tree on a slow phone CPU causes no layout shift (CLS < 0.05)', async ({ page, isMobile }) => {
+    test.skip(!isMobile, 'a Pixel 7 on a throttled CPU (the mobile project; CDP is Chromium-only)');
+    const cdp = await page.context().newCDPSession(page);
+    await cdp.send('Emulation.setCPUThrottlingRate', { rate: 8 });
+    await page.goto('/#tree');
+    const cls = await loadCls(page);
+    console.log(`/#tree load CLS (mobile, 8× CPU throttle): ${cls.toFixed(4)}`);
+    expect(cls).toBeLessThan(0.05);
+  });
 });
 
 test.describe('app bundle arrives after the 3s failsafe', () => {

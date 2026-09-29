@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { Suspense } from 'react';
+import { projects } from '@/content/projects';
 
 describe('lazyInspector', () => {
   it('preloadInspector swallows a failed chunk load (it surfaces on open instead)', async () => {
@@ -24,7 +25,9 @@ describe('lazyInspector', () => {
     const { createInspector } = await import('./lazyInspector');
     const Panel = createInspector();
     expect(createInspector()).not.toBe(Panel);
-    const props = { project: {} as never, opener: null, onClose: () => {} };
+    const project = projects[0]!;
+    const opener: HTMLElement | null = null;
+    const props = { project, opener, onClose: () => {} };
     render(
       <Suspense fallback={null}>
         <Panel {...props} />

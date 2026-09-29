@@ -1,6 +1,8 @@
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, onTestFinished } from 'vitest';
 import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { hydrateRoot, type Root } from 'react-dom/client';
+import { renderToString } from 'react-dom/server';
 import { CareerTree } from './CareerTree';
 import { PINNABLE_QUERY } from './usePinnable';
 import { experience } from '@/content/experience';
@@ -87,6 +89,27 @@ describe('<CareerTree />', () => {
       expect(list).toHaveAttribute('data-lenis-prevent');
       await userEvent.click(earlySummary());
       expect(list).not.toHaveAttribute('data-lenis-prevent');
+    });
+
+    it('honours an <EarlyCareer> opened before hydration (data-lenis-prevent once pinned)', async () => {
+      let root: Root | undefined;
+      const container = document.createElement('div');
+      container.innerHTML = renderToString(<CareerTree />);
+      document.body.appendChild(container);
+      onTestFinished(() => {
+        act(() => root?.unmount());
+        container.remove();
+      });
+      const details = container.querySelector('details')!;
+      details.open = true; // the visitor toggled it in the prerendered HTML, before the bundle hydrated
+      await new Promise((r) => setTimeout(r, 0)); // let the pre-hydration toggle event fire, unheard
+      pinnable();
+      await act(async () => {
+        root = hydrateRoot(container, <CareerTree />);
+      });
+      expect(container.querySelector('[data-pinned]')).not.toBeNull();
+      expect(details.open).toBe(true);
+      expect(container.querySelector('ol')).toHaveAttribute('data-lenis-prevent');
     });
 
     it('keeps an open <EarlyCareer> open when it stops pinning (no remount)', async () => {

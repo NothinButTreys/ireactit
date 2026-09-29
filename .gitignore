@@ -11,3 +11,5 @@ playwright/.cache
 .DS_Store
 *.tsbuildinfo
 .superpowers
+.pw-out/
+tests/zz-probe/

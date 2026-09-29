@@ -49,5 +49,10 @@ describe('View Source snippets', () => {
     const source = readFileSync(join(process.cwd(), path), 'utf8');
     const missing = identifiers(code).filter((id) => !new RegExp(`\\b${id}\\b`).test(source));
     expect(missing, `${file} → ${path}`).toEqual([]);
+    const attrs = [...code.matchAll(/\bdata-[a-z-]+/g)].map((m) => m[0]);
+    const refs = [...code.matchAll(/\b(\w+)\.current\b/g)].map((m) => `${m[1]}.current`);
+    for (const token of new Set([...attrs, ...refs])) {
+      expect(source, `${file}: snippet mentions ${token}, source does not`).toContain(token);
+    }
   });
 });

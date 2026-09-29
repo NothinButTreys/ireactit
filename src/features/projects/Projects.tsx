@@ -39,7 +39,7 @@ export function Projects() {
               onInspect={(opener) => {
                 if (loadFailed.current) {
                   loadFailed.current = false;
-                  setInspectorPanel(createInspector()); // React.lazy caches the rejection; retry with a fresh one
+                  setInspectorPanel(() => createInspector()); // React.lazy caches the rejection; retry with a fresh one
                 }
                 setOpen({ project, opener });
                 setOpenCount((n) => n + 1);

@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import type { Experience } from '@/content/types';
 import { formatRange } from './careerProgress';
 
@@ -6,6 +7,13 @@ type Props = { roles: readonly Experience[]; mounted: boolean; onOpenChange?: (o
 export function EarlyCareerNode({ roles, mounted, onOpenChange }: Props) {
   const from = roles.at(-1)?.start.slice(0, 4);
   const to = roles[0]?.end?.slice(0, 4);
+  const ref = useRef<HTMLDetailsElement>(null);
+
+  // A visitor can open the prerendered <details> before hydration; that toggle event fired with no listener.
+  useEffect(() => {
+    if (ref.current?.open) onOpenChange?.(true);
+  }, [onOpenChange]);
+
   return (
     <li data-state={mounted ? 'mounted' : 'pending'} className="relative pl-10 pinned:pl-8">
       <span
@@ -13,6 +21,7 @@ export function EarlyCareerNode({ roles, mounted, onOpenChange }: Props) {
         className={`absolute top-[22px] left-0 h-px w-8 origin-left transition-transform duration-500 pinned:top-4 pinned:w-6 ${mounted ? 'scale-x-100 bg-primary' : 'scale-x-0 bg-border'}`}
       />
       <details
+        ref={ref}
         onToggle={(event) => onOpenChange?.(event.currentTarget.open)}
         className={`group rounded-xl border border-dashed bg-card px-5 py-3 transition-colors duration-500 pinned:py-1.5 ${mounted ? 'border-border' : 'border-border/40 bg-card/40'}`}
       >
