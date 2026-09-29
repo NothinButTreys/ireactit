@@ -19,6 +19,16 @@ export async function dryRunContact(page: Page, token: string) {
   );
 }
 
+/**
+ * Run `push` and prove the contact POST it triggers was a DITL dry run. A real send also shows "delivered", so
+ * without this a drifted DITL_TOKEN would pass while emailing Trey on every deploy-check.
+ */
+export async function pushExpectingDryRun(page: Page, push: () => Promise<void>) {
+  const response = page.waitForResponse((r) => new URL(r.url()).pathname === '/api/contact' && r.request().method() === 'POST');
+  await push();
+  expect(await (await response).json(), 'the contact POST must be a DITL dry run, not a real send').toEqual({ ok: true, dryRun: true });
+}
+
 export async function fillCommit(page: Page, who: string) {
   await page.getByLabel(/--author/).fill(who);
   await page.getByLabel(/--email/).fill('ditl@example.com');

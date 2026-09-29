@@ -1,5 +1,5 @@
 import { expect, test } from '../fixtures';
-import { ditlToken, dryRunContact, expectAxeClean, onlyProject } from './helpers';
+import { ditlToken, dryRunContact, expectAxeClean, onlyProject, pushExpectingDryRun } from './helpers';
 
 // A 640×450 CSS viewport at scale factor 2 is the 1280×900 desktop at 200% zoom.
 test.use({ reducedMotion: 'reduce', viewport: { width: 640, height: 450 }, deviceScaleFactor: 2 });
@@ -33,7 +33,7 @@ test('Accessible Ari: keyboard only at 200% zoom, reduced motion, axe clean at e
   await page.keyboard.type('Day in the life: Ari says hello, keyboard only.');
   await page.keyboard.press('Tab');
   await expect(page.getByRole('button', { name: 'git push' })).toBeFocused();
-  await page.keyboard.press('Enter');
+  await pushExpectingDryRun(page, () => page.keyboard.press('Enter'));
   await expect(page.locator('#commit').getByRole('status')).toContainText('delivered to trey/main');
   await expectAxeClean(page);
 });

@@ -1,6 +1,6 @@
 import { profile } from '../../src/content/profile';
 import { expect, test } from '../fixtures';
-import { ditlToken, dryRunContact, fillCommit, onlyProject } from './helpers';
+import { ditlToken, dryRunContact, fillCommit, onlyProject, pushExpectingDryRun } from './helpers';
 
 test('Recruiter Riley: skims every step on a phone, inspects a project, checks the resume, says hello', async ({ page }, testInfo) => {
   onlyProject(testInfo, 'mobile');
@@ -22,6 +22,6 @@ test('Recruiter Riley: skims every step on a phone, inspects a project, checks t
   await dryRunContact(page, token!);
   await page.locator('#commit').scrollIntoViewIfNeeded();
   await fillCommit(page, 'Recruiter Riley');
-  await page.getByRole('button', { name: 'git push' }).click();
+  await pushExpectingDryRun(page, () => page.getByRole('button', { name: 'git push' }).click());
   await expect(page.locator('#commit').getByRole('status')).toContainText('delivered to trey/main');
 });
