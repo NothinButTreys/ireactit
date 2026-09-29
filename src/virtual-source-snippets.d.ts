@@ -1,6 +1,6 @@
 declare module 'virtual:source-snippets' {
   const snippets: Record<
-    'mount' | 'write' | 'tree' | 'props' | 'commit',
+    import('./content/sections').SectionId,
     { filename: string; html: string; lines: number }
   >;
   export default snippets;

@@ -7,14 +7,14 @@
     "node": ">=20.19"
   },
   "scripts": {
-    "dev": "VITE_CONFIG_NATIVE_IGNORE_WARNING=true vite",
-    "build": "VITE_CONFIG_NATIVE_IGNORE_WARNING=true bash -c 'tsc --noEmit && vite build && vite build --ssr src/entry-server.tsx --outDir dist-server && tsx scripts/prerender.ts'",
-    "preview": "VITE_CONFIG_NATIVE_IGNORE_WARNING=true vite preview --port 4173 --strictPort",
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build && vite build --ssr src/entry-server.tsx --outDir dist-server && tsx scripts/prerender.ts",
+    "preview": "vite preview --port 4173 --strictPort",
     "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.server.json",
     "lint": "eslint .",
-    "test": "VITE_CONFIG_NATIVE_IGNORE_WARNING=true vitest run",
-    "test:watch": "VITE_CONFIG_NATIVE_IGNORE_WARNING=true vitest",
-    "coverage": "VITE_CONFIG_NATIVE_IGNORE_WARNING=true vitest run --coverage",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "coverage": "vitest run --coverage",
     "e2e": "playwright test",
     "e2e:ditl": "playwright test tests/ditl"
   },

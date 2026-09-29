@@ -15,6 +15,8 @@ const theme = createCssVariablesTheme({ name: 'ireactit', variablePrefix: '--shi
 // every call in this process and never disposed — dev/build/test processes are short-lived, and a
 // cold create-per-call was slow enough under parallel test load to make the lazy SourcePanel chunk
 // (which resolves this virtual module) occasionally miss a test's assertion timeout.
+// Module-scope singleton, created once and intentionally never disposed: cheap for a handful of
+// snippets in one language (tsx); revisit if the snippet set grows to many languages/instances.
 let highlighterPromise: ReturnType<typeof createHighlighter> | undefined;
 function getHighlighter() {
   highlighterPromise ??= createHighlighter({ themes: [theme], langs: ['tsx'] });
