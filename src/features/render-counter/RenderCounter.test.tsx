@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { RenderCounterBadge, RenderCounterProvider, useRenderCount } from './RenderCounter';
+import { RenderCounterBadge, RenderCounterProvider, useBump, useRenderCount } from './RenderCounter';
 
 function Bumper() {
   const { bump } = useRenderCount();
@@ -34,5 +34,26 @@ describe('RenderCounter', () => {
     it('throws a helpful error outside the provider', () => {
       expect(() => render(<Bumper />)).toThrow('useRenderCount must be used inside <RenderCounterProvider>');
     });
+  });
+});
+
+describe('useBump', () => {
+  it('gives bump-only consumers a stable function that does not re-render them', async () => {
+    const renders = { count: 0 };
+    function OnlyBump() {
+      renders.count += 1;
+      const bump = useBump();
+      return <button onClick={bump}>bump only</button>;
+    }
+    render(
+      <RenderCounterProvider>
+        <OnlyBump />
+        <RenderCounterBadge />
+      </RenderCounterProvider>,
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'bump only' }));
+    await userEvent.click(screen.getByRole('button', { name: 'bump only' }));
+    expect(screen.getByText('renders: 2')).toBeInTheDocument();
+    expect(renders.count).toBe(1);
   });
 });

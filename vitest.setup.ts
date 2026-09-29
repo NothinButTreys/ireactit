@@ -23,6 +23,16 @@ if (typeof globalThis.IntersectionObserver === 'undefined') {
   } as unknown as typeof IntersectionObserver;
 }
 
+// jsdom has no ResizeObserver; a no-op default lets real Lenis (via <SmoothScroll />) construct in tests
+// that render the app shell without mocking it out.
+if (typeof globalThis.ResizeObserver === 'undefined') {
+  globalThis.ResizeObserver = class {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  } as unknown as typeof ResizeObserver;
+}
+
 // jsdom's <dialog> support is partial; model showModal/close deterministically (close fires 'close').
 if (typeof HTMLDialogElement !== 'undefined') {
   HTMLDialogElement.prototype.showModal = function showModal(this: HTMLDialogElement) {

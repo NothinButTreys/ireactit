@@ -13,7 +13,20 @@ export default defineConfig([
     plugins: { 'react-refresh': reactRefresh },
     languageOptions: { globals: { ...globals.browser, ...globals.node } },
     rules: {
-      'react-refresh/only-export-components': ['warn', { allowExportNames: ['useRenderCount', 'useViewSource'] }],
+      'react-refresh/only-export-components': [
+        'warn',
+        { allowExportNames: ['useRenderCount', 'useViewSource', 'useBump', 'useSectionProgress', 'NAV_OFFSET'] },
+      ],
+    },
+  },
+  {
+    // Test-only "probe" components intentionally mutate an outer render counter to observe
+    // re-render behaviour (a standard React Testing Library pattern). The React Compiler
+    // purity rules from react-hooks/recommended are meant for shipped components, not these.
+    files: ['**/*.test.{ts,tsx}'],
+    rules: {
+      'react-hooks/immutability': 'off',
+      'react-hooks/globals': 'off',
     },
   },
   {

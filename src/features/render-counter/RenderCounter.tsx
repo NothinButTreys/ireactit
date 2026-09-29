@@ -1,20 +1,29 @@
-import { createContext, use, useCallback, useMemo, useState } from 'react';
+import { createContext, use, useCallback, useState } from 'react';
 
-type RenderCount = { count: number; bump: () => void };
-
-const RenderCountContext = createContext<RenderCount | null>(null);
+const CountContext = createContext<number | null>(null);
+const BumpContext = createContext<(() => void) | null>(null);
 
 export function RenderCounterProvider({ children }: { children: React.ReactNode }) {
   const [count, setCount] = useState(0);
   const bump = useCallback(() => setCount((c) => c + 1), []);
-  const value = useMemo(() => ({ count, bump }), [count, bump]);
-  return <RenderCountContext value={value}>{children}</RenderCountContext>;
+  return (
+    <BumpContext value={bump}>
+      <CountContext value={count}>{children}</CountContext>
+    </BumpContext>
+  );
 }
 
-export function useRenderCount(): RenderCount {
-  const value = use(RenderCountContext);
-  if (!value) throw new Error('useRenderCount must be used inside <RenderCounterProvider>');
-  return value;
+/** Stable across renders; use it when a component only increments the counter. */
+export function useBump(): () => void {
+  const bump = use(BumpContext);
+  if (!bump) throw new Error('useBump must be used inside <RenderCounterProvider>');
+  return bump;
+}
+
+export function useRenderCount(): { count: number; bump: () => void } {
+  const count = use(CountContext);
+  if (count === null) throw new Error('useRenderCount must be used inside <RenderCounterProvider>');
+  return { count, bump: useBump() };
 }
 
 export function RenderCounterBadge() {

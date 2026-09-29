@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import { Nav } from './Nav';
+import { SectionProgressProvider } from './SectionProgress';
 import { RenderCounterProvider } from '@/features/render-counter/RenderCounter';
 import { ViewSourceProvider } from '@/features/view-source/ViewSource';
 
@@ -10,25 +11,41 @@ function renderNav() {
   return render(
     <RenderCounterProvider>
       <ViewSourceProvider>
-        <Nav />
+        <SectionProgressProvider>
+          <Nav />
+        </SectionProgressProvider>
       </ViewSourceProvider>
     </RenderCounterProvider>,
   );
 }
 
 describe('<Nav />', () => {
-  it('renders the lifecycle rail in render-cycle order with hash links', () => {
+  it('renders the render-cycle rail twice (desktop bar + mobile pill), in order, with hash links', () => {
     renderNav();
-    const rail = screen.getByRole('navigation', { name: 'Render cycle' });
-    const links = within(rail).getAllByRole('link');
-    expect(links.map((l) => l.getAttribute('href'))).toEqual(['#mount', '#write', '#tree', '#props', '#commit']);
-    expect(links.map((l) => l.textContent)).toEqual(['mount', 'write', 'tree', 'props', 'commit']);
+    const rails = screen.getAllByRole('navigation', { name: 'Render cycle' });
+    expect(rails).toHaveLength(2);
+    for (const rail of rails) {
+      const links = within(rail).getAllByRole('link');
+      expect(links.map((l) => l.getAttribute('href'))).toEqual(['#mount', '#write', '#tree', '#props', '#commit']);
+      expect(links.map((l) => l.textContent)).toEqual(['mount', 'write', 'tree', 'props', 'commit']);
+    }
   });
 
-  it('marks the active step with aria-current', () => {
+  it('marks the active step with aria-current in both rails', () => {
     renderNav();
-    expect(screen.getByRole('link', { name: 'tree' })).toHaveAttribute('aria-current', 'location');
-    expect(screen.getByRole('link', { name: 'mount' })).not.toHaveAttribute('aria-current');
+    for (const link of screen.getAllByRole('link', { name: 'tree' })) {
+      expect(link).toHaveAttribute('aria-current', 'location');
+    }
+    for (const link of screen.getAllByRole('link', { name: 'mount' })) {
+      expect(link).not.toHaveAttribute('aria-current');
+    }
+  });
+
+  it('offers a skip link to the main content first', () => {
+    renderNav();
+    const links = screen.getAllByRole('link');
+    expect(links[0]).toHaveTextContent('Skip to content');
+    expect(links[0]).toHaveAttribute('href', '#main');
   });
 
   it('shows the wordmark, the toggles and the render counter', () => {
