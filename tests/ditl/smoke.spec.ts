@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from '../fixtures';
 
 test.describe('Day in the Life: smoke', () => {
   test('a visitor can reach every step of the render cycle', async ({ page }) => {
@@ -9,9 +9,14 @@ test.describe('Day in the Life: smoke', () => {
     }
   });
 
-  test('the contact API accepts a dry-run commit', async ({ request }) => {
+  test('the contact API accepts a dry-run commit', async ({ request }, testInfo) => {
+    test.skip(testInfo.project.name !== 'chromium', 'API dry-run only needs to run once, on chromium');
     const token = process.env.DITL_TOKEN;
-    test.skip(!token, 'DITL_TOKEN not set');
+    if (process.env.CI) {
+      expect(token, 'DITL_TOKEN must be set in CI').toBeTruthy();
+    } else {
+      test.skip(!token, 'DITL_TOKEN not set');
+    }
     const res = await request.post('/api/contact', {
       headers: { 'x-ditl-token': token! },
       data: { name: 'Ditl Bot', email: 'ditl@example.com', message: 'Day in the life smoke test.' },

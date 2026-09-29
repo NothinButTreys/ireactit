@@ -11,6 +11,8 @@ type Deps = {
 const json = (status: number, body: unknown) => Response.json(body, { status });
 
 function clientIp(req: Request): string {
+  // Vercel overwrites `x-forwarded-for` at the edge, so the first value here is
+  // trustworthy. Revisit this if a proxy is ever placed in front of the function.
   return req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
 }
 
@@ -30,12 +32,15 @@ export function createContactHandler({ send, limiter, ditlToken }: Deps) {
 
     if (parsed.data.company) return json(200, { ok: true });
 
-    if (!limiter(clientIp(req))) return json(429, { ok: false, error: 'rate_limited' });
-
     const header = req.headers.get('x-ditl-token');
+    // Check for a valid DITL token before the rate limiter so dry-run traffic
+    // (CI smoke tests, deploy checks) never consumes the real rate-limit budget.
+    // A wrong or absent token still falls through to the limiter below.
     if (ditlToken && header && safeEqual(header, ditlToken)) {
       return json(200, { ok: true, dryRun: true });
     }
+
+    if (!limiter(clientIp(req))) return json(429, { ok: false, error: 'rate_limited' });
 
     try {
       await send(parsed.data);

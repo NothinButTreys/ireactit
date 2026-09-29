@@ -67,6 +67,16 @@ describe('POST /api/contact handler', () => {
     expect(send).not.toHaveBeenCalled();
   });
 
+  it('a valid DITL token is not rate-limited', async () => {
+    const { handler, send, limiter } = setup();
+    limiter.mockReturnValue(false);
+    const res = await handler(req(valid, { 'x-ditl-token': 'ditl-secret' }));
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ ok: true, dryRun: true });
+    expect(limiter).not.toHaveBeenCalled();
+    expect(send).not.toHaveBeenCalled();
+  });
+
   it('ignores a wrong DITL token and sends for real', async () => {
     const { handler, send } = setup();
     await handler(req(valid, { 'x-ditl-token': 'guess' }));
