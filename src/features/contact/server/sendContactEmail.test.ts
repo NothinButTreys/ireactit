@@ -65,6 +65,30 @@ describe('sendContactEmail', () => {
     expect(send).toHaveBeenCalledWith(expect.objectContaining({ from: 'Custom <custom@example.com>' }));
   });
 
+  it('sends from the Resend integration domain when RESEND_EMAIL_DOMAIN is set and CONTACT_FROM_EMAIL is not', async () => {
+    vi.stubEnv('RESEND_API_KEY', 'key');
+    vi.stubEnv('CONTACT_TO_EMAIL', 'to@example.com');
+    vi.stubEnv('CONTACT_FROM_EMAIL', undefined);
+    vi.stubEnv('RESEND_EMAIL_DOMAIN', 'mail.example.com');
+    send.mockResolvedValue({ data: { id: '1' }, error: null });
+
+    await sendContactEmail(input);
+
+    expect(send).toHaveBeenCalledWith(expect.objectContaining({ from: 'IReactIt <contact@mail.example.com>' }));
+  });
+
+  it('prefers CONTACT_FROM_EMAIL over RESEND_EMAIL_DOMAIN when both are set', async () => {
+    vi.stubEnv('RESEND_API_KEY', 'key');
+    vi.stubEnv('CONTACT_TO_EMAIL', 'to@example.com');
+    vi.stubEnv('CONTACT_FROM_EMAIL', 'Custom <custom@example.com>');
+    vi.stubEnv('RESEND_EMAIL_DOMAIN', 'mail.example.com');
+    send.mockResolvedValue({ data: { id: '1' }, error: null });
+
+    await sendContactEmail(input);
+
+    expect(send).toHaveBeenCalledWith(expect.objectContaining({ from: 'Custom <custom@example.com>' }));
+  });
+
   it('throws with the Resend error message when send fails', async () => {
     vi.stubEnv('RESEND_API_KEY', 'key');
     vi.stubEnv('CONTACT_TO_EMAIL', 'to@example.com');

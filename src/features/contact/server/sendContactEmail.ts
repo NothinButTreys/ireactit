@@ -8,8 +8,12 @@ export async function sendContactEmail(input: ContactInput): Promise<void> {
 
   const resend = new Resend(apiKey);
   const safeName = input.name.replace(/[\r\n]+/g, ' ');
+  const from =
+    process.env.CONTACT_FROM_EMAIL ??
+    (process.env.RESEND_EMAIL_DOMAIN ? `IReactIt <contact@${process.env.RESEND_EMAIL_DOMAIN}>` : undefined) ??
+    'IReactIt <onboarding@resend.dev>';
   const { error } = await resend.emails.send({
-    from: process.env.CONTACT_FROM_EMAIL ?? 'IReactIt <onboarding@resend.dev>',
+    from,
     to,
     replyTo: input.email,
     subject: `ireactit.com: commit from ${safeName}`,
