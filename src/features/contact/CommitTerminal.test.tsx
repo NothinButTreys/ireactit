@@ -45,7 +45,7 @@ describe('<CommitTerminal />', () => {
     expect(doc.querySelector('form')).toHaveAttribute('method', 'post');
     expect(doc.querySelector('form')).not.toHaveAttribute('action');
     expect(doc.querySelector('button[type="submit"]')).toBeDisabled();
-    expect(html).toMatch(/<noscript>.*LinkedIn.*<\/noscript>/s);
+    expect(html).toMatch(/<p data-no-js-only=""[^>]*>.*LinkedIn.*<\/p>/s);
     expect(html).toContain(`href="${profile.links.linkedin}"`);
   });
 
@@ -90,7 +90,9 @@ describe('<CommitTerminal />', () => {
     await userEvent.click(screen.getByRole('button', { name: 'git push' }));
     expect(await screen.findByText(/push rejected/)).toBeInTheDocument();
     expect(screen.getByLabelText(/-m/)).toHaveValue('Loved the render cycle!');
-    expect(screen.getByRole('link', { name: /LinkedIn/ })).toBeInTheDocument();
+    // The rejected push log offers LinkedIn; the other link is the no-JS fallback, which CSS hides under html.js.
+    const links = screen.getAllByRole('link', { name: /LinkedIn/ });
+    expect(links.filter((a) => !a.closest('[data-no-js-only]'))).toHaveLength(1);
   });
 
   it('submits with Ctrl+Enter from the message box', async () => {

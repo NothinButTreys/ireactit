@@ -53,6 +53,8 @@ test.describe('app bundle fails to load', () => {
     expect(await page.evaluate(() => document.documentElement.classList.contains('js'))).toBe(false);
     // The bundle never hydrated, so the prerendered push button stays disabled: no native GET with PII in the URL.
     await expect(page.getByRole('button', { name: 'git push' })).toBeDisabled();
+    // ...and, unlike a <noscript>, the LinkedIn fallback shows here too (JS is on, only the bundle failed).
+    await expect(page.locator('#commit').getByRole('link', { name: /LinkedIn/ }).first()).toBeVisible();
   });
 });
 

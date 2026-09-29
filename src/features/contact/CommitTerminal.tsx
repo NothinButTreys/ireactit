@@ -166,15 +166,15 @@ export function CommitTerminal() {
             git push
           </button>
         </div>
-        <noscript>
-          <p className="pt-3 font-mono text-xs text-muted">
-            The terminal needs JavaScript. Reach me on{' '}
-            <a href={profile.links.linkedin} target="_blank" rel="noreferrer" className="text-primary underline-offset-4 hover:underline">
-              LinkedIn ↗
-            </a>
-            .
-          </p>
-        </noscript>
+        {/* Shown only while html lacks `.js`: no JavaScript, or the bundle failed and the 3s failsafe dropped `.js`
+            (a <noscript> would miss that second case). */}
+        <p data-no-js-only="" className="pt-3 font-mono text-xs text-muted">
+          The terminal needs JavaScript. Reach me on{' '}
+          <a href={profile.links.linkedin} target="_blank" rel="noreferrer" className="text-primary underline-offset-4 hover:underline">
+            LinkedIn ↗
+          </a>
+          .
+        </p>
       </div>
       <PushLog state={state} />
     </form>

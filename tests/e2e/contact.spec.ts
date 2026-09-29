@@ -92,3 +92,8 @@ test('the author field shows a visible keyboard focus indicator', async ({ page 
 
   expect(outlineStyle !== 'none' || boxShadow !== 'none').toBe(true);
 });
+
+test('the no-JS LinkedIn fallback is hidden once the app has hydrated', async ({ page }) => {
+  await expect(page.getByRole('button', { name: 'git push' })).toBeEnabled();
+  await expect(page.locator('#commit [data-no-js-only]')).toBeHidden();
+});
