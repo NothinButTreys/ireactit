@@ -36,7 +36,7 @@ export const projects: Project[] = [
         highlight: { x: 18, y: 59, w: 64, h: 7 },
       },
     },
-    reviewed: false,
+    reviewed: true,
   },
   {
     slug: 'alice-is-missing',
@@ -68,7 +68,7 @@ export const projects: Project[] = [
         body: 'A live digital edition that preserves what makes the tabletop game special: collaborative storytelling, real-time mystery solving and rich characters, now playable with friends anywhere.',
       },
     },
-    reviewed: false,
+    reviewed: true,
   },
   {
     slug: 'support-portal',
@@ -100,7 +100,7 @@ export const projects: Project[] = [
         body: 'A centralised hub where players ask questions, discuss games, share ideas and interact with the development team in one place, and a foundation every future PixelTable title launches into.',
       },
     },
-    reviewed: false,
+    reviewed: true,
   },
   {
     slug: 'natural-world-library',
@@ -132,6 +132,6 @@ export const projects: Project[] = [
         body: 'A growing digital library with Geologist, Herbalist and Mycologist primers already live and an Avian primer on the way, serving curious hobbyists and professional researchers alike from one shared, trustworthy source.',
       },
     },
-    reviewed: false,
+    reviewed: true,
   },
 ];
