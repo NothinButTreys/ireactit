@@ -15,6 +15,6 @@ jobs:
         with: { node-version: 22, cache: pnpm }
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
-      - run: pnpm exec playwright test tests/visual --project=chromium --project=mobile --update-snapshots
+      - run: PW_VISUAL=1 pnpm exec playwright test tests/visual --project=chromium --project=mobile --update-snapshots
       - uses: actions/upload-artifact@v4
         with: { name: visual-baselines, path: tests/visual/__screenshots__ }

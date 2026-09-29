@@ -5,7 +5,7 @@ dist-server
 .vercel
 coverage
 test-results
-playwright-report
+playwright-report*
 blob-report
 playwright/.cache
 .DS_Store

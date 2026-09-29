@@ -11,9 +11,6 @@ concurrency:
 jobs:
   ci:
     runs-on: ubuntu-latest
-    container:
-      image: mcr.microsoft.com/playwright:v1.63.0-noble
-      options: --ipc=host
     timeout-minutes: 20
     env:
       DITL_TOKEN: ci-local-dry-run-token
@@ -31,10 +28,16 @@ jobs:
       - run: pnpm build
       - run: pnpm check:bundle
       - run: pnpm check:csp
+      - run: pnpm exec playwright install --with-deps chromium webkit
       - run: pnpm e2e
+      # Visual baselines are rendered in the Playwright image, so they are compared there too.
+      - name: Visual regression (Playwright container)
+        run: bash scripts/visual-run.sh
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: playwright-report-ci
-          path: playwright-report
+          path: |
+            playwright-report
+            playwright-report-visual
           retention-days: 7

@@ -8,9 +8,13 @@ try {
 
 const baseURL = process.env.BASE_URL ?? 'http://localhost:4173';
 const bypass = process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
+// tests/visual compares against Linux baselines and runs only inside the Playwright image
+// (scripts/visual-run.sh, scripts/visual-update.sh), which sets PW_VISUAL=1.
+const visual = !!process.env.PW_VISUAL;
 
 export default defineConfig({
   testDir: './tests',
+  testIgnore: visual ? [] : ['visual/**'],
   snapshotPathTemplate: '{testDir}/visual/__screenshots__/{projectName}/{arg}{ext}',
   expect: { toHaveScreenshot: { maxDiffPixelRatio: 0.01, animations: 'disabled', caret: 'hide' } },
   fullyParallel: true,
