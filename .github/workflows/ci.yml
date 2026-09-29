@@ -27,6 +27,7 @@ jobs:
       - run: pnpm coverage
       - run: pnpm build
       - run: pnpm check:bundle
+      - run: pnpm check:csp
       - run: pnpm exec playwright install --with-deps chromium webkit
       - run: pnpm e2e
       - uses: actions/upload-artifact@v4

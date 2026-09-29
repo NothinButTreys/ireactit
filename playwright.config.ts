@@ -18,9 +18,10 @@ export default defineConfig({
   use: {
     baseURL,
     trace: 'retain-on-failure',
-    extraHTTPHeaders: bypass
-      ? { 'x-vercel-protection-bypass': bypass, 'x-vercel-set-bypass-cookie': 'true' }
-      : undefined,
+    extraHTTPHeaders: {
+      'x-vercel-skip-toolbar': '1',
+      ...(bypass ? { 'x-vercel-protection-bypass': bypass, 'x-vercel-set-bypass-cookie': 'true' } : {}),
+    },
   },
   projects: [
     { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
