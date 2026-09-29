@@ -220,15 +220,25 @@ body {
   }
 }
 
-/* Career tree: pinned and scroll-driven only where its fixed-geometry stage fits under the nav — JS running,
-   motion allowed, lg and tall (mirrors PINNABLE_QUERY in usePinnable.ts). Everywhere else it's the static
-   tree. Decided here too, so the pin's height is right before hydration (no layout shift when JS takes over). */
-@media (min-width: 1024px) and (min-height: 760px) and (prefers-reduced-motion: no-preference),
-  (min-width: 1200px) and (min-height: 700px) and (prefers-reduced-motion: no-preference) {
-  .js .career-pin {
+/* Career tree: pinned and scroll-driven only where its fixed-geometry stage fits under the nav — JS running
+   (html.js), motion allowed, lg and tall. The em sizes mirror PINNABLE_QUERY in usePinnable.ts (which also
+   requires html.js). The tree renders one markup in both modes; `pinned:` utilities switch the layout, so
+   prerender, hydration and crossing the threshold never swap subtrees or shift layout. */
+@custom-variant pinned {
+  @media (min-width: 64em) and (min-height: 47.5em) and (prefers-reduced-motion: no-preference),
+    (min-width: 75em) and (min-height: 43.75em) and (prefers-reduced-motion: no-preference) {
+    &:where(.js *) {
+      @slot;
+    }
+  }
+}
+.career-pin {
+  @variant pinned {
     height: 300svh;
   }
-  .js .career-sticky {
+}
+.career-sticky {
+  @variant pinned {
     position: sticky;
     top: 3.5rem;
     height: calc(100svh - 3.5rem);

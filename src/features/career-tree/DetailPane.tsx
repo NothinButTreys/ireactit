@@ -2,22 +2,23 @@ import type { Experience } from '@/content/types';
 import { formatRange } from './careerProgress';
 import { Highlights } from './Highlights';
 
-type Props = { role: Experience | undefined; early: readonly Experience[] };
+type Props = { active: boolean; role: Experience | undefined; early: readonly Experience[] };
 
 /**
- * Pinned mode only: a fixed-size pane showing the newest mounted node's children. It duplicates copy that is
+ * Shown only by the `pinned:` variant: a fixed-size pane showing the newest mounted node's children. It duplicates copy that is
  * already in each node (visually hidden), so it's hidden from assistive tech and find-in-page (aria-hidden + inert).
- * Content swaps with a transform/opacity/blur mount-in; the pane itself never resizes.
+ * Content swaps with a transform/opacity/blur mount-in; the pane itself never resizes. Empty unless pinned (JS),
+ * so static and prerendered HTML carry no duplicate copy; filling it on hydration can't shift layout.
  */
-export function DetailPane({ role, early }: Props) {
+export function DetailPane({ active, role, early }: Props) {
   return (
     <div
       data-career-detail=""
       aria-hidden
       inert
-      className="min-h-0 flex-1 overflow-hidden rounded-xl border border-primary/60 bg-card px-5 py-4"
+      className="hidden min-h-0 flex-1 overflow-hidden rounded-xl border border-primary/60 bg-card px-5 py-4 pinned:block"
     >
-      {role ? (
+      {!active ? null : role ? (
         <div key={role.component} className="mount-in flex flex-col gap-2">
           <p className="font-mono text-[13px]">
             <span className="tok-tag">&lt;{role.component}&gt;</span>

@@ -1,23 +1,22 @@
 import type { Experience } from '@/content/types';
 import { formatRange } from './careerProgress';
 
-type Props = { roles: readonly Experience[]; mounted: boolean; pinned?: boolean };
+type Props = { roles: readonly Experience[]; mounted: boolean; onOpenChange?: (open: boolean) => void };
 
-export function EarlyCareerNode({ roles, mounted, pinned = false }: Props) {
+export function EarlyCareerNode({ roles, mounted, onOpenChange }: Props) {
   const from = roles.at(-1)?.start.slice(0, 4);
   const to = roles[0]?.end?.slice(0, 4);
   return (
-    <li data-state={mounted ? 'mounted' : 'pending'} className={`relative ${pinned ? 'pl-8' : 'pl-10'}`}>
+    <li data-state={mounted ? 'mounted' : 'pending'} className="relative pl-10 pinned:pl-8">
       <span
         aria-hidden
-        className={`absolute ${pinned ? 'top-4 w-6' : 'top-[22px] w-8'} left-0 h-px origin-left transition-transform duration-500 ${mounted ? 'scale-x-100 bg-primary' : 'scale-x-0 bg-border'}`}
+        className={`absolute top-[22px] left-0 h-px w-8 origin-left transition-transform duration-500 pinned:top-4 pinned:w-6 ${mounted ? 'scale-x-100 bg-primary' : 'scale-x-0 bg-border'}`}
       />
       <details
-        className={`group rounded-xl border border-dashed bg-card px-5 transition-colors ${pinned ? 'py-1.5' : 'py-3'} duration-500 ${mounted ? 'border-border' : 'border-border/40 bg-card/40'}`}
+        onToggle={(event) => onOpenChange?.(event.currentTarget.open)}
+        className={`group rounded-xl border border-dashed bg-card px-5 py-3 transition-colors duration-500 pinned:py-1.5 ${mounted ? 'border-border' : 'border-border/40 bg-card/40'}`}
       >
-        <summary
-          className={`cursor-pointer list-none font-mono text-[13px] [&::-webkit-details-marker]:hidden ${pinned ? 'leading-snug' : 'leading-relaxed md:text-[15px]'}`}
-        >
+        <summary className="cursor-pointer list-none font-mono text-[13px] leading-relaxed md:text-[15px] pinned:text-[13px] pinned:leading-snug [&::-webkit-details-marker]:hidden">
           <span aria-hidden className="inline-block text-muted transition-transform duration-300 group-open:rotate-90">
             ▸
           </span>{' '}
@@ -30,7 +29,7 @@ export function EarlyCareerNode({ roles, mounted, pinned = false }: Props) {
           <span className="tok-num">{roles.length}</span>
           <span className="tok-punct">{'}'}</span>
           <span className="tok-tag"> /&gt;</span>
-          <span className={`flex flex-wrap gap-1.5 group-open:hidden ${pinned ? 'mt-1 mb-0.5' : 'mt-2'}`}>
+          <span className="mt-2 flex flex-wrap gap-1.5 group-open:hidden pinned:mt-1 pinned:mb-0.5">
             {roles.map((role) => (
               <span key={role.component} className="rounded-md border border-border px-2 py-0.5 text-[11px] text-muted">
                 &lt;{role.component} /&gt;

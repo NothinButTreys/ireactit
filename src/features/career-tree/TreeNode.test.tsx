@@ -9,7 +9,7 @@ const role = experience[0]!;
 function structure(mounted: boolean, newest: boolean): string {
   const { container, unmount } = render(
     <ol>
-      <TreeNode role={role} mounted={mounted} newest={newest} pinned />
+      <TreeNode role={role} mounted={mounted} newest={newest} />
     </ol>,
   );
   const html = container.innerHTML.replace(/ (class|data-state)="[^"]*"/g, '');
@@ -17,7 +17,7 @@ function structure(mounted: boolean, newest: boolean): string {
   return html;
 }
 
-describe('<TreeNode /> when pinned', () => {
+describe('<TreeNode />', () => {
   it('has identical structure whether pending, mounted or newest, so progress never shifts layout', () => {
     const pending = structure(false, false);
     expect(structure(true, false)).toBe(pending);
@@ -27,7 +27,7 @@ describe('<TreeNode /> when pinned', () => {
   it('reports its state for styling and tests', () => {
     const { container } = render(
       <ol>
-        <TreeNode role={role} mounted={false} newest={false} pinned />
+        <TreeNode role={role} mounted={false} newest={false} />
       </ol>,
     );
     expect(container.querySelector('li')).toHaveAttribute('data-state', 'pending');

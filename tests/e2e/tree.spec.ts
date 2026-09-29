@@ -1,6 +1,29 @@
+import type { Page } from '@playwright/test';
 import { expect, test } from '../fixtures';
 
 const NAV = 56;
+
+/** Cumulative layout shift since navigation start (buffered), ignoring shifts right after input. */
+async function loadCls(page: Page): Promise<number> {
+  await expect(page.locator('html.hydrated')).toBeAttached();
+  await page.waitForTimeout(1500);
+  return page.evaluate(
+    () =>
+      new Promise<number>((resolve) => {
+        let total = 0;
+        const observer = new PerformanceObserver((list) => {
+          for (const entry of list.getEntries() as (PerformanceEntry & { value: number; hadRecentInput: boolean })[]) {
+            if (!entry.hadRecentInput) total += entry.value;
+          }
+        });
+        observer.observe({ type: 'layout-shift', buffered: true });
+        setTimeout(() => {
+          observer.disconnect();
+          resolve(total);
+        }, 100);
+      }),
+  );
+}
 
 test.describe('large, tall viewport (pinned)', () => {
   test.skip(({ isMobile }) => isMobile, 'the tree pins only at lg and ≥700px tall');
@@ -36,7 +59,7 @@ test.describe('large, tall viewport (pinned)', () => {
     // below the fold or out of view in the node list.
     const overflow = await sticky.evaluate((el) => el.scrollHeight - el.clientHeight);
     expect(overflow).toBeLessThanOrEqual(0);
-    const listOverflow = await sticky.locator('ol[data-lenis-prevent]').evaluate((el) => el.scrollHeight - el.clientHeight);
+    const listOverflow = await sticky.locator('ol').first().evaluate((el) => el.scrollHeight - el.clientHeight);
     expect(listOverflow).toBeLessThanOrEqual(0);
   });
 
@@ -74,6 +97,56 @@ test.describe('large, tall viewport (pinned)', () => {
   });
 });
 
+test.describe('loading into the tree', () => {
+  test('reloading mid-pin causes no layout shift (CLS < 0.05)', async ({ page, isMobile }) => {
+    test.skip(isMobile, 'the tree pins only at lg and tall');
+    await page.goto('/');
+    await expect(page.locator('#tree .career-pin[data-pinned]')).toBeAttached();
+    await page.evaluate(() => {
+      const pin = document.querySelector<HTMLElement>('#tree .career-pin')!;
+      window.scrollTo(0, pin.offsetTop + pin.offsetHeight / 2);
+    });
+    await page.waitForTimeout(300);
+    await page.reload();
+    const cls = await loadCls(page);
+    const inPin = await page.evaluate(() => {
+      const pin = document.querySelector<HTMLElement>('#tree .career-pin')!;
+      return window.scrollY > pin.offsetTop && window.scrollY < pin.offsetTop + pin.offsetHeight;
+    });
+    console.log(`reload mid-pin CLS: ${cls.toFixed(4)}`);
+    expect(inPin).toBe(true);
+    expect(cls).toBeLessThan(0.05);
+  });
+
+  test('deep-linking to /#tree causes no layout shift (CLS < 0.05)', async ({ page, isMobile }) => {
+    await page.goto('/#tree');
+    const cls = await loadCls(page);
+    console.log(`/#tree load CLS (${isMobile ? 'mobile' : 'desktop'}): ${cls.toFixed(4)}`);
+    expect(cls).toBeLessThan(0.05);
+  });
+});
+
+test.describe('app bundle arrives after the 3s failsafe', () => {
+  test.use({ viewport: { width: 1280, height: 800 } });
+  test.skip(({ isMobile }) => isMobile, 'desktop-only: the tree would pin here');
+
+  test('the tree stays the static layout, with every node mounted and its highlights visible', async ({ page }) => {
+    await page.route('**/assets/index-*.js', async (route) => {
+      await new Promise((r) => setTimeout(r, 4500));
+      await route.continue();
+    });
+    await page.goto('/');
+    await expect(page.locator('html.hydrated')).toBeAttached({ timeout: 10_000 });
+    expect(await page.evaluate(() => document.documentElement.classList.contains('js'))).toBe(false);
+    const tree = page.locator('#tree');
+    await tree.scrollIntoViewIfNeeded();
+    await expect(tree.locator('.career-pin')).not.toHaveAttribute('data-pinned');
+    await expect(tree.locator('.career-sticky')).toHaveCSS('position', 'static');
+    await expect(tree.locator('[data-state="mounted"]')).toHaveCount(6);
+    await expect(tree.getByText('Owned technical breakdowns for upcoming front-end projects')).toBeVisible();
+  });
+});
+
 test.describe('phones', () => {
   test.skip(({ isMobile }) => !isMobile, 'mobile project only');
 
@@ -95,5 +168,5 @@ test('the early career subtree expands on click', async ({ page }) => {
   const summary = page.locator('#tree summary');
   await summary.scrollIntoViewIfNeeded();
   await summary.click();
-  await expect(page.getByText('Dynamic Page Solutions')).toBeVisible();
+  await expect(page.locator('#tree details').getByText('Dynamic Page Solutions')).toBeVisible();
 });
